@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+// Override variable
+$primary: #FFD500;
+$dark: #454545;
+
+$font-family-base: 'Poppins', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$font-size-base: 0.875rem;
+
+$h1-font-size: 64px;
+$h2-font-size: 52px;
+$h3-font-size: 36px;
+$h4-font-size: 24px;
+
+// Variable
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+$custom-colors: (
+  "gray": #808080,
+  "gray-light": #C0C0C0
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// Utilities
+@import "bootstrap/scss/utilities";
+
+// Add
+$utilities: map-merge(
+  $utilities,
+  (
+    "cursor": (
+      property: cursor,
+      class: cursor,
+      responsive: true,
+      values: auto pointer grab,
+    ),
+    "letter-spacing": (
+      property: letter-spacing,
+      class: ls,
+      values: (
+        "95": -0.05em,
+        "100": 0
+      )
+    )
+  )
+);
+
+// Modify
+$utilities: map-merge(
+  $utilities,
+  (
+    "font-weight": map-merge(
+      map-get($utilities, "font-weight"),
+      (
+        values: (
+          "normal": 400,
+          "semi-bold": 600,
+          "bold": 700
+        )
+      ),
+    ),
+  )
+);
+
+// Main bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+// My Custom
+
+// Remove bg-autofill chrome
+input:-webkit-autofill {
+  &,
+  &:hover,
+  &:focus,
+  &:active {
+    box-shadow: 0 0 0 30px white inset !important;
+  }
+}
+
+.bg-glass {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+}

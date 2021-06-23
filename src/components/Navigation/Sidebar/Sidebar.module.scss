@@ -1,0 +1,12 @@
+.Sidebar {
+  height: calc(100% - 53.5px);
+  padding-right: 8em !important;
+  top: 53.5px;
+  left: 0;
+  
+  transform: translateX(-100%);
+}
+
+.Show {
+  transform: translateX(0);
+}
