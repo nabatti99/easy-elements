@@ -15,9 +15,9 @@ const searchBar = props => (
       <form>
         <div className="input-group">
           <label 
-            for="SearchUrl" 
+            htmlFor="SearchUrl" 
             className="input-group-text bg-transparent border-0 me-1 p-0">
-            <i class="ri-search-2-line"></i>
+            <i className="ri-search-2-line"></i>
           </label>
           <input 
             className="form-control bg-transparent border-0 shadow-none p-1" 

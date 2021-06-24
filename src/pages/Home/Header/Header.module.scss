@@ -1,0 +1,31 @@
+@import "../../../scss/variables";
+
+.Header {
+  min-height: 500px;
+}
+
+.Title {
+  position: relative;
+
+  & > div {
+    position: relative;
+  }
+}
+
+.RadioBg {
+  position: absolute;
+  height: 580px;
+  top: 0;
+  left: -20%;
+}
+
+.Radio {
+  position: relative; 
+}
+
+.RectangleBg {
+  position: absolute;
+  height: 350px;
+  top: -20px;
+  left: 0;
+}

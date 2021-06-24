@@ -1,0 +1,61 @@
+// Base Utilities
+@import "bootstrap/scss/utilities";
+
+// Add
+$utilities: map-merge(
+  $utilities,
+  (
+    "cursor": (
+      property: cursor,
+      class: cursor,
+      responsive: true,
+      values: auto pointer grab,
+    ),
+    "letter-spacing": (
+      property: letter-spacing,
+      class: ls,
+      values: (
+        "95": -0.05em,
+        "100": 0
+      )
+    ),
+    "color-hover": (
+      property: color,
+      class: color,
+      state: hover,
+      values: $theme-colors
+    ),
+    "background-hover": (
+      property: background-color,
+      class: bg,
+      state: hover,
+      values: $theme-colors
+    ),
+    "transition": (
+      property: transition,
+      class: transition,
+      values: (
+        slow: 0.3s ease-in-out,
+        normal: 0.20s ease-in-out,
+        fast: 0.15s ease-in-out
+      )
+    )
+  )
+);
+
+// Modify
+$utilities: map-merge(
+  $utilities,
+  (
+    "font-weight": map-merge(
+      map-get($utilities, "font-weight"),
+      (
+        values: (
+          "normal": 400,
+          "semi-bold": 600,
+          "bold": 700
+        )
+      ),
+    ),
+  )
+);

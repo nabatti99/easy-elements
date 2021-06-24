@@ -1,6 +1,5 @@
 /**
  * 
- * @param props 
  * textColor, bgColor: List colors at Bootstrap V5
  * 
  * children: Text value
@@ -19,7 +18,8 @@ const button = props => {
     "shadow-none",
     "ls-95",
     `text-${props.textColor}`,
-    `btn-${props.bgColor}`
+    `btn-${props.bgColor}`,
+    props.className ? props.className : ""
   ];
 
   return (

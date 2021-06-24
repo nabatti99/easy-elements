@@ -1,7 +1,7 @@
 import { Component } from "react";
 import classes from "./Sidebar.module.scss";
 
-import SearchBar from "../Navbar/Searchbar/Searchbar";
+import SearchBar from "../../UI/Searchbar/Searchbar";
 
 class Sidebar extends Component {
 

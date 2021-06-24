@@ -18,7 +18,8 @@
     "px-4",
     "shadow-none",
     "ls-95",
-    `btn-outline-${props.bgColor}`
+    `btn-outline-${props.bgColor}`,
+    props.className ? props.className : ""
   ];
 
   return (

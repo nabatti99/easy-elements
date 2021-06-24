@@ -1,8 +1,11 @@
+@import "../../../scss/variables";
+
 .Sidebar {
   height: calc(100% - 53.5px);
   padding-right: 8em !important;
   top: 53.5px;
   left: 0;
+  z-index: $zindex-fixed;
   
   transform: translateX(-100%);
 }

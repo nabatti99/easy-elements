@@ -2,7 +2,6 @@ import { Component } from "react";
 
 import classes from "./Layout.module.scss";
 import Navigation from "../../components/Navigation/Navigation";
-
 class Layout extends Component {
 
   render() {
@@ -15,8 +14,8 @@ class Layout extends Component {
       <div>
         <Navigation />
 
-        <div className={ className.layout } style={{height: "3000px"}}>
-          test
+        <div className={ className.layout }>
+          { this.props.children }
         </div>
       </div>
     );
