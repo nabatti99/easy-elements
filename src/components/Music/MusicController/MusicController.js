@@ -7,9 +7,6 @@ import MusicItem from "../MusicItem/MusicItem";
 
 import * as actions from "../../../redux/Music/actions";
 
-/**
- * @param id Music Id (Number)
- */
 class MusicController extends Component {
 
   state = {
@@ -26,7 +23,7 @@ class MusicController extends Component {
   }
 
   componentDidMount () {
-    artlistAxios.get(`/Song/Details?ID=${ this.props.id }`)
+    artlistAxios.get(`/history/${ this.props.id }.json`)
     .then(response => {
       const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName } = response.data;
 
@@ -76,6 +73,8 @@ class MusicController extends Component {
 
   render () {
 
+    const isPlaying = this.state.isFocus ? this.props.isPlaying : false;
+
     return (
       <MusicItem
         thumbnail={ this.state.thumbnail }
@@ -83,7 +82,7 @@ class MusicController extends Component {
         playlist={ this.state.playlist }
         genres={ this.state.genres }
         music={ this.state.music }
-        isPlaying={ this.props.isPlaying }
+        isPlaying={ isPlaying }
         process={ this.state.process }
         toggled={ this.handleToggle } />
     );
@@ -105,4 +104,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+/**
+ * @param id Music Id (Number)
+ */
 export default connect(mapStateToProps, mapDispatchToProps)(MusicController);

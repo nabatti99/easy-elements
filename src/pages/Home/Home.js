@@ -8,10 +8,10 @@ class Home extends Component {
   render () {
 
     const className = {
-      home: "container",
+      home: "container-fluid",
       container: "row flex-column",
-      header: "col-auto mt-5",
-      history: "col-auto"
+      header: "col-auto p-0 mt-5",
+      history: "col-auto p-0"
     }
 
     return (

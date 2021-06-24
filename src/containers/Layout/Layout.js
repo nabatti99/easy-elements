@@ -7,7 +7,7 @@ class Layout extends Component {
   render() {
 
     const className = {
-      layout: `container-fluid ${classes.Layout}`
+      layout: classes.Layout
     }
 
     return (

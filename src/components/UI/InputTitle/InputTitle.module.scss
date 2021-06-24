@@ -4,7 +4,16 @@
   max-width: 400px;
   border-bottom: 0.2rem solid $primary;
 
-  & .Input::placeholder {
+  & .Input,
+  & .Label {
+    color: tint-color($primary, 40%);
+  }
+
+  & .Input:focus {
     color: $primary;
+  }
+
+  & .Input::placeholder {
+    color: tint-color($primary, 40%);
   }
 }

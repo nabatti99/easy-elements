@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://cors-anywhere.herokuapp.com/https://artlist.io/api",
+  baseURL: "https://learning-easy-661d1.firebaseio.com/",
   timeout: 10000,
   headers: {
     "crossDomain": true,

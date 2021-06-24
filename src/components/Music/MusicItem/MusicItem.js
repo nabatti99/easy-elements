@@ -31,6 +31,7 @@ class MusicItem extends Component {
 
     const className = {
       container: "row justify-content-center align-items-center h-100",
+      containerLeft: "row align-items-center h-100",
       playIcon: `${controlIconNameClassName} fs-3 text-dark cursor-pointer color-primary-hover transition-normal`,
       downloadIcon: "ri-download-fill",
       download: "text-decoration-none fs-4 text-dark color-primary-hover transition-normal",
@@ -45,12 +46,12 @@ class MusicItem extends Component {
     ));
 
     return (
-      <div className="row py-3">
+      <div className="row py-4">
 
-        <div className="col-1">
+        <div className="col-2">
           <div className={ className.container }>
             <div className="col-auto">
-              <img src={ thumbnail } height="60px" alt="Thumbnail" />
+              <img src={ thumbnail } height="80px" alt="Thumbnail" />
             </div>
           </div>
         </div>
@@ -63,8 +64,8 @@ class MusicItem extends Component {
           </div>
         </div>
 
-        <div className="col-3">
-          <div className={ className.container }>
+        <div className="col-2">
+          <div className={ className.containerLeft }>
             <div className="col-auto">
               <a className={ className.musicName } href="#">{ name }</a>
               <a className={ className.playlistName }>{ playlist }</a>

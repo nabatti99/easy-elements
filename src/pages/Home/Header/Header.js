@@ -13,6 +13,7 @@ class Header extends Component {
   render () {
 
     const className = {
+      container: "container",
       header: `row align-items-stretch ${classes.Header}`,
       titleArea: `row flex-column ${classes.Title}`,
       title: "fw-bold ls-95 text-dark",
@@ -20,47 +21,49 @@ class Header extends Component {
     }
 
     return (
-      <div className={ className.header }>
-        <div className="col-lg-7 col-md-6 col-12">
+      <div className={ className.container }>
+        <div className={ className.header }>
+          <div className="col-lg-7 col-md-6 col-12">
 
-          <div className={ className.titleArea }>
+            <div className={ className.titleArea }>
 
-            <img src={ RectangleBg } className={ classes.RectangleBg } alt="RectangleBg" />
+              <img src={ RectangleBg } className={ classes.RectangleBg } alt="RectangleBg" />
 
-            <div className="col mb-5">
-              <h1 className={ className.title }>Boost your videos<br/>by royalty resources</h1>
-            </div>
+              <div className="col mb-5">
+                <h1 className={ className.title }>Boost your videos<br/>by royalty resources</h1>
+              </div>
 
-            <div className="col mb-3">
-              <InputTitle 
-                value=""
-                placeholder="Put your URL here"
-                id="SearchTitle"
-                icon="ri-links-fill">Put your URL here</InputTitle>
-            </div>
+              <div className="col mb-3">
+                <InputTitle 
+                  value="123"
+                  placeholder="Put your URL here"
+                  id="SearchTitle"
+                  icon="ri-links-fill">Put your URL here</InputTitle>
+              </div>
 
-            <div className="col">
-              <ButtonOutline 
-                className="me-3"
-                bgColor="dark" 
-                onClick={null}>Genres</ButtonOutline>
+              <div className="col">
+                <ButtonOutline 
+                  className="me-3"
+                  bgColor="dark" 
+                  onClick={null}>Genres</ButtonOutline>
 
-              <ButtonOutline 
-                bgColor="dark" 
-                onClick={null}>History</ButtonOutline>
+                <ButtonOutline 
+                  bgColor="dark" 
+                  onClick={null}>History</ButtonOutline>
+              </div>
+
             </div>
 
           </div>
 
-        </div>
-
-        <div className="col-lg-5 col-md-6 col-12">
-          <div className={ className.radioArea }>
-            <img src={ RadioImg } className={ classes.Radio } alt="Radio" />
-            <img src={ RadioImgBg } className={ classes.RadioBg } alt="RadioBg" />
+          <div className="col-lg-5 col-md-6 col-12">
+            <div className={ className.radioArea }>
+              <img src={ RadioImg } className={ classes.Radio } alt="Radio" />
+              <img src={ RadioImgBg } className={ classes.RadioBg } alt="RadioBg" />
+            </div>
           </div>
+          
         </div>
-        
       </div>
     );
   }
