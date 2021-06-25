@@ -24,7 +24,7 @@ class History extends Component {
           </div>
 
           <div className="col-auto">
-            {/* <MusicList /> */}
+            <MusicList />
           </div>
         </div>
       </div>

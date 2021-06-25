@@ -25,3 +25,10 @@ export const pauseMusic = () => {
     type: actionsType.PAUSE_MUSIC
   }
 }
+
+export const updateProcess = process => {
+  return {
+    type: actionsType.UPDATE_PROCESS,
+    process
+  }
+}

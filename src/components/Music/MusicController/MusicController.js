@@ -11,14 +11,13 @@ class MusicController extends Component {
 
   state = {
     isFocus: this.props.focusId === this.props.id,
-    loading: false,
+    loading: true,
     error: null,
 
     thumbnail: "",
     name: "",
     playlist: "",
     music: "",
-    process: 20,
     genres: []
   }
 
@@ -26,7 +25,6 @@ class MusicController extends Component {
     artlistAxios.get(`/history/${ this.props.id }.json`)
     .then(response => {
       const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName } = response.data;
-
       const genres = genreCategories.map(genreCategorie => genreCategorie.name);
       
       this.setState({
@@ -45,11 +43,24 @@ class MusicController extends Component {
     });
   }
 
-  componentDidUpdate () {
-    const checkFocus = this.props.focusId === this.props.id;
+  static getDerivedStateFromProps(props, state) {
+    return {
+      ...state,
+      isFocus: props.focusId === props.id
+    }
+  }
 
-    if (checkFocus !== this.state.isFocus)
-      this.setState({ isFocus: checkFocus });
+  shouldComponentUpdate (nextProps, nextState) {
+    let shouldUpdate = false;
+
+    shouldUpdate = this.state.loading || shouldUpdate;
+    shouldUpdate = this.state.isFocus || shouldUpdate;
+
+    return shouldUpdate;
+  }
+
+  componentDidUpdate () {
+    console.log(this.state);
   }
 
   handleToggle = () => {
@@ -73,8 +84,6 @@ class MusicController extends Component {
 
   render () {
 
-    const isPlaying = this.state.isFocus ? this.props.isPlaying : false;
-
     return (
       <MusicItem
         thumbnail={ this.state.thumbnail }
@@ -82,8 +91,8 @@ class MusicController extends Component {
         playlist={ this.state.playlist }
         genres={ this.state.genres }
         music={ this.state.music }
-        isPlaying={ isPlaying }
-        process={ this.state.process }
+        isPlaying={ this.state.isFocus ? this.props.isPlaying : false }
+        process={ this.state.isFocus ? this.props.process : 0 }
         toggled={ this.handleToggle } />
     );
   }
@@ -92,7 +101,8 @@ class MusicController extends Component {
 const mapStateToProps = state => {
   return {
     isPlaying: state.music.isPlaying,
-    focusId: state.music.id
+    focusId: state.music.id,
+    process: state.music.process
   }
 }
 

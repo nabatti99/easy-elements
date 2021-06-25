@@ -2,6 +2,7 @@ import { Component } from "react";
 
 import classes from "./Layout.module.scss";
 import Navigation from "../../components/Navigation/Navigation";
+import MusicFloatingController from "../../components/Music/MusicFloatingController/MusicFloatingController";
 class Layout extends Component {
 
   render() {
@@ -17,6 +18,8 @@ class Layout extends Component {
         <div className={ className.layout }>
           { this.props.children }
         </div>
+
+        <MusicFloatingController />
       </div>
     );
   }

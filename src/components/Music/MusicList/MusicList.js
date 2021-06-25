@@ -12,7 +12,11 @@ class MusicList extends Component {
 
   componentDidMount () {
     setTimeout(() => {
-      this.setState({ idsList: [9633, 34438, 16569, 57337, 63617], loading: false })
+      this.setState({ 
+        // idsList: [9633, 34438, 16569, 57337, 63617], 
+        idsList: [9633, 34438, 16569], 
+        loading: false 
+      });
     }, 500);
   }
 

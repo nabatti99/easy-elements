@@ -7,7 +7,7 @@ const initialState = {
   playlist: "",
 
   isPlaying: false,
-  // process: 20,
+  process: 0,
   music: null
 }
 
@@ -21,21 +21,27 @@ const reducer = (state = initialState, action) => {
         thumbnail: action.thumbnail,
         name: action.name,
         playlist: action.playlist,
-        isPlaying: true
+        isPlaying: true,
+        
+        process: 0
       }
 
     case actionsType.PLAY_MUSIC:
       return {
         ...state,
-        // process: 20,
         isPlaying: true
       }
 
     case actionsType.PAUSE_MUSIC:
       return {
         ...state,
-        // process: 20,
         isPlaying: false
+      }
+
+    case actionsType.UPDATE_PROCESS:
+      return {
+        ...state,
+        process: action.process
       }
 
     default:
