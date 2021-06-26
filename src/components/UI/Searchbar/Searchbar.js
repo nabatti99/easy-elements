@@ -1,18 +1,10 @@
-/**
- * 
- * @param props 
- * 
- * value: String
- * 
- * onChange: handleFunction
- * 
- * @returns 
- */
+import withUrlController from "../../WithUrlController/WithUrlController";
+
 const searchBar = props => (
   <div className="row align-items-center h-100">
     <div className="col">
 
-      <form>
+      <form onSubmit={ props.submitted }>
         <div className="input-group">
           <label 
             htmlFor="SearchUrl" 
@@ -34,4 +26,9 @@ const searchBar = props => (
   </div>
 );
 
-export default searchBar;
+/**
+ * @param value: String
+ * @param changed: handleFunction
+ * @param submitted: handle Function
+ */
+export default withUrlController(searchBar);

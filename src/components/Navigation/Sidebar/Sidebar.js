@@ -20,7 +20,7 @@ class Sidebar extends Component {
     }
 
     return (
-      <div className={ className.sidebar }>
+      <div id="navbarSupportedContent" className={ className.sidebar }>
         <div className={ className.container } >
 
           <div className="col-auto">

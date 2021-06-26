@@ -1,6 +1,26 @@
 import { Component } from "react";
 
+import classes from "./MusicFloating.module.scss";
+
 class MusicFloating extends Component {
+
+  baseWidthVolumeElement = 0;
+
+  componentDidMount() {
+    const baseClientXVolume = document
+                              .querySelector(`.${classes.Thumb}`)
+                              .getClientRects()[0].x;
+
+    this.props.setBaseVolumeClientX(baseClientXVolume);
+
+    this.baseWidthVolumeElement = document
+                              .querySelector(`.${classes.Volume}`)
+                              .getClientRects()[0].width;
+
+    document.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    }, false);
+  }
 
   render () {
 
@@ -10,10 +30,12 @@ class MusicFloating extends Component {
       playlist,
       music,
       process,
+      volume,
       isPlaying,
       timer,
 
-      toggled
+      toggled,
+      draggedVolume
     } = this.props;
 
     const controlIconNameClassName = isPlaying ? "ri-pause-fill" : "ri-play-fill";
@@ -87,7 +109,12 @@ class MusicFloating extends Component {
           <div className="col-2">
             <div className={ className.container }>
               <div className="col-auto">
-                Volume
+                <div className={ classes.Volume }>
+                  <div 
+                    className={ classes.Thumb } draggable
+                    onDrag={ draggedVolume }
+                    style={{ left: this.baseWidthVolumeElement * volume }}></div>
+                </div>
               </div>
             </div>
           </div>
@@ -108,5 +135,7 @@ class MusicFloating extends Component {
  * @param timer: String
  * 
  * @param toggled: Play/Pause Event
+ * @param setBeginVolumeClientX: Get Volume ClientX
+ * @param draggedVolume: Drag Volume Event
  */
 export default MusicFloating;

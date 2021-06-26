@@ -8,3 +8,12 @@ export const parseTime = time => {
 export const parseProcess = (currentTime, duration) => {
   return (currentTime / duration) * 100;
 }
+
+export const parseVolumeByClientX = (baseClientX, currentClientX, volumeElementWidth) => {
+  const rawVolumeValue = (currentClientX - baseClientX) / volumeElementWidth;
+
+  let volumeValue = Math.min(rawVolumeValue, 1);
+  volumeValue = Math.max(0, volumeValue);
+
+  return volumeValue;
+}

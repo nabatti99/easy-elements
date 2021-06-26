@@ -1,0 +1,25 @@
+@import "../../../scss/variables";
+
+.Volume {
+  min-width: 100px;
+  max-width: 150px;
+  height: 4px;
+  margin: 4px 0;
+  background-color: $gray-200;
+  border-radius: 2px;
+  position: relative;
+
+  & .Thumb {
+    position: absolute;
+    width: 4px;
+    height: 12px;
+    top: -4px;
+    left: 0;
+    cursor: grab;
+    background-color: $dark;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}

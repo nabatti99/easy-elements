@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { parseTime, parseProcess } from "../../../utilities/music";
+import { parseTime, parseProcess, parseVolumeByClientX } from "../../../utilities/music";
 
 import MusicFloating from "../MusicFloating/MusicFloating";
 
@@ -16,11 +16,14 @@ class MusicFloatingController extends Component {
 
   audio = new Audio();
 
+  baseVolumeClientX = 0;
+
   state = {
     loadingAudio: false,
     duration: "00:00",
     currentTime: "00:00",
-    process: 0
+    process: 0,
+    volume: 1
   }
 
   componentDidMount () {
@@ -29,6 +32,19 @@ class MusicFloatingController extends Component {
     this.audio.onloadstart = this.handleLoadStartAudioData;
     this.audio.ondurationchange = this.handleDurationChange;
     this.audio.ontimeupdate = this.handleTimeUpdate;
+    this.audio.onvolumechange = this.handleVolumeChange;
+  }
+
+  setBaseVolumeClientX = (clientX) => {
+    this.baseClientXVolume = clientX;
+  }
+
+  handleDragVolume = (event) => {
+    console.log("Dragging");
+    const thumbElement = event.target;
+    const volumeElement = thumbElement.parentElement;
+
+    this.audio.volume = parseVolumeByClientX(this.baseClientXVolume, event.clientX, volumeElement.clientWidth);
   }
 
   handleLoadStartAudioData = () => {
@@ -55,6 +71,11 @@ class MusicFloatingController extends Component {
     });
 
     this.props.onUpdateProcess(process);
+  }
+
+  handleVolumeChange = () => {
+    this.setState({ volume: this.audio.volume });
+    console.log(this.audio.volume);
   }
 
   componentDidUpdate () {
@@ -105,9 +126,12 @@ class MusicFloatingController extends Component {
         name={ this.props.name }
         playlist={ this.props.playlist }
         music={ this.props.music }
+        volume={ this.state.volume }
         isPlaying={ this.props.isPlaying }
         process={ this.state.process }
-        toggled={ this.handleToggle } />
+        toggled={ this.handleToggle }
+        setBaseVolumeClientX={ this.setBaseVolumeClientX }
+        draggedVolume={ this.handleDragVolume } />
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import artlistAxios from "../../../axios/artlist_io.axios";
+import firebaseAxios from "../../../axios/firebase.axios";
 // import axios from "axios";
 
 import MusicItem from "../MusicItem/MusicItem";
@@ -22,7 +22,7 @@ class MusicController extends Component {
   }
 
   componentDidMount () {
-    artlistAxios.get(`/history/${ this.props.id }.json`)
+    firebaseAxios.get(`/history/${ this.props.id }.json`)
     .then(response => {
       const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName } = response.data;
       const genres = genreCategories.map(genreCategorie => genreCategorie.name);

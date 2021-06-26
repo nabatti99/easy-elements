@@ -21,13 +21,16 @@ class Navbar extends Component {
     return (
       <nav className={ className.navbar }>
         <div className={ className.container }>
-          <button className={ className.button } type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+          <button 
+            className={ className.button } 
+            type="button" 
+            onClick={ this.props.toggledSidebar }>
             <i className={ className.menuIcon }></i>
           </button>
           <a className="navbar-brand" href="#">
             <img src={Logo} alt="Logo" height="24px" />
           </a>
-          <div className={ className.collapse } id="navbarSupportedContent">
+          <div className={ className.collapse }>
             <div className="container-fluid">
               <div className="row align-item-center">
 

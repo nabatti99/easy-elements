@@ -1,9 +1,6 @@
+import withUrlController from "../../WithUrlController/WithUrlController";
 import classes from "./InputTitle.module.scss";
 
-/**
- * @param value: String
- * @param onChange: handleFunction
- */
 const inputTitle = props => {
 
   const className = {
@@ -40,4 +37,8 @@ const inputTitle = props => {
   );
 }
 
-export default inputTitle;
+/**
+ * @param value: String
+ * @param onChange: handleFunction
+ */
+export default withUrlController(inputTitle);
