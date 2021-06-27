@@ -1,13 +1,7 @@
 /**
- * 
- * @param props 
- * bgColor: List colors at Bootstrap V5
- * 
- * children: Text value
- * 
- * clicked: onClick Event
- * 
- * @returns ButtonElement
+ * @param textColor: List colors at Bootstrap V5
+ * @param children: Text value
+ * @param clicked: onClick Event
  */
  const buttonOutline = props => {
 
@@ -18,7 +12,7 @@
     "px-4",
     "shadow-none",
     "ls-95",
-    `btn-outline-${props.bgColor}`,
+    `btn-outline-${props.textColor}`,
     props.className ? props.className : ""
   ];
 

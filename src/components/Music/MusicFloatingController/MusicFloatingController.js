@@ -33,6 +33,7 @@ class MusicFloatingController extends Component {
     this.audio.ondurationchange = this.handleDurationChange;
     this.audio.ontimeupdate = this.handleTimeUpdate;
     this.audio.onvolumechange = this.handleVolumeChange;
+    this.audio.onended = this.handleAudioEnded;
   }
 
   setBaseVolumeClientX = (clientX) => {
@@ -71,6 +72,10 @@ class MusicFloatingController extends Component {
     });
 
     this.props.onUpdateProcess(process);
+  }
+
+  handleAudioEnded = () => {
+    this.props.onPause();
   }
 
   handleVolumeChange = () => {

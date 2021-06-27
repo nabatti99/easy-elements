@@ -3,7 +3,7 @@ import { Component } from "react";
 import ButtonOutline from "../../../components/UI/ButtonOutline/ButtonOutline";
 import InputTitle from "../../../components/UI/InputTitle/InputTitle";
 
-import classes from "./Header.module.scss";
+import classes from "./HomeHeader.module.scss";
 import RadioImg from "../../../assets/images/radio.png";
 import RadioImgBg from "../../../assets/images/radio-bg.png";
 import RectangleBg from "../../../assets/images/Blue Blur Rectangle.png";
@@ -44,11 +44,11 @@ class Header extends Component {
               <div className="col">
                 <ButtonOutline 
                   className="me-3"
-                  bgColor="dark" 
+                  textColor="dark" 
                   onClick={null}>Genres</ButtonOutline>
 
                 <ButtonOutline 
-                  bgColor="dark" 
+                  textColor="dark" 
                   onClick={null}>History</ButtonOutline>
               </div>
 

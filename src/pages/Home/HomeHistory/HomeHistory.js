@@ -1,7 +1,7 @@
 import { Component, Fragment } from "react";
 
 import Logo from "../../../assets/images/logo.png";
-import classes from "./History.module.scss";
+import classes from "./HomeHistory.module.scss";
 import MusicList from "../../../components/Music/MusicList/MusicList";
 
 class History extends Component {

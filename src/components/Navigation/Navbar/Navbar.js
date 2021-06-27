@@ -15,7 +15,7 @@ class Navbar extends Component {
       menuIcon: "ri-menu-line ri-lg",
       collapse: "collapse navbar-collapse",
       itemsList: "list-group list-group-horizontal",
-      itemArea: "list-group-item border-0 p-0"
+      itemArea: "list-group-item bg-transparent border-0 p-0"
     }
 
     return (
@@ -27,7 +27,7 @@ class Navbar extends Component {
             onClick={ this.props.toggledSidebar }>
             <i className={ className.menuIcon }></i>
           </button>
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="/">
             <img src={Logo} alt="Logo" height="24px" />
           </a>
           <div className={ className.collapse }>

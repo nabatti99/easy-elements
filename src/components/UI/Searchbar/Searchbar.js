@@ -1,5 +1,10 @@
 import withUrlController from "../../WithUrlController/WithUrlController";
 
+/**
+ * @param value: String
+ * @param changed: handleFunction
+ * @param submitted: handle Function
+ */
 const searchBar = props => (
   <div className="row align-items-center h-100">
     <div className="col">
@@ -26,9 +31,4 @@ const searchBar = props => (
   </div>
 );
 
-/**
- * @param value: String
- * @param changed: handleFunction
- * @param submitted: handle Function
- */
 export default withUrlController(searchBar);

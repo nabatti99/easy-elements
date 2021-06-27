@@ -1,7 +1,7 @@
 import { Component } from "react";
 
-import Header from "./Header/Header";
-import History from "./History/History";
+import Header from "./HomeHeader/HomeHeader";
+import History from "./HomeHistory/HomeHistory";
 
 class Home extends Component {
 

@@ -34,14 +34,14 @@ class Sidebar extends Component {
           </div>
 
           <div className="col-auto mb-4">
-            <dd><a className={ className.link } href="#">Get your musics</a></dd>
+            <dd><a className={ className.link } href="/">Get your musics</a></dd>
             <dd><a className={ className.link } href="#">Histories</a></dd>
             <dd><a className={ className.linkDisabled }>Moods</a></dd>
           </div>
 
           <div className="col-auto mt-auto">
             <dt className={ className.ourTeam }>Our Team</dt>
-            <p className="text-gray">Minh from <a className={ className.linkCredit } href="#">Hugo English Club</a></p>
+            <p className="text-gray">Minh from <a className={ className.linkCredit } href="https://www.facebook.com/HUGOClub">Hugo English Club</a></p>
           </div>
 
         </div>

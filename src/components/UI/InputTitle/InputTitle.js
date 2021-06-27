@@ -1,6 +1,11 @@
 import withUrlController from "../../WithUrlController/WithUrlController";
 import classes from "./InputTitle.module.scss";
 
+/**
+ * @param value: String
+ * @param changed: handleFunction
+ * @param submitted: handle Function
+ */
 const inputTitle = props => {
 
   const className = {
@@ -14,7 +19,7 @@ const inputTitle = props => {
     <div className="row align-items-center h-100">
       <div className="col">
 
-        <form className={ className.form }>
+        <form className={ className.form } onSubmit={ props.submitted }>
           <div className="input-group">
             <label 
               htmlFor="SearchUrl" 
@@ -37,8 +42,4 @@ const inputTitle = props => {
   );
 }
 
-/**
- * @param value: String
- * @param onChange: handleFunction
- */
 export default withUrlController(inputTitle);
