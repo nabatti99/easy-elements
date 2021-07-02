@@ -8,7 +8,8 @@ const initialState = {
 
   isPlaying: false,
   process: 0,
-  music: null
+  music: null,
+  peaks: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -17,6 +18,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         music: action.music,
+        peaks: action.peaks,
         id: action.id,
         thumbnail: action.thumbnail,
         name: action.name,

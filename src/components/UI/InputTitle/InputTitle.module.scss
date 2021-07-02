@@ -5,12 +5,24 @@
   border-bottom: 0.2rem solid $primary;
 
   & .Input,
-  & .Label {
+  & .Label,
+  & .Button {
     color: tint-color($primary, 40%);
   }
 
-  & .Input:focus {
+  & .Button {
+    visibility: hidden;
+  }
+
+  & .Input:focus,
+  & .Button:hover {
     color: $primary;
+  }
+
+  & .Input:focus {
+    & ~ .Button {
+      visibility: visible;
+    }
   }
 
   & .Input::placeholder {

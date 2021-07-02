@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://learning-easy-661d1.firebaseio.com/",
-  timeout: 10000,
+  baseURL: "https://cors-anywhere-server-nabatti99.herokuapp.com/https://artlist.io/api/",
+  timeout: 180000,
   headers: {
-    "crossDomain": true,
-    "Content-Type": "application/json"
+    "x-requested-with": "*",
+    "permit-by-nabatti99": "true"
   }
 });
 

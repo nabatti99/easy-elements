@@ -8,7 +8,7 @@ class Sidebar extends Component {
   render () {
 
     const className = {
-      sidebar: `border-end bg-glass position-fixed d-flex overflow-auto p-5 
+      sidebar: `bg-glass position-fixed d-flex overflow-auto scrollbar p-5 transition-slow 
         ${classes.Sidebar} ${this.props.show ? classes.Show : ""}`,
 
       container: "row flex-column flex-nowrap",
@@ -20,7 +20,7 @@ class Sidebar extends Component {
     }
 
     return (
-      <div id="navbarSupportedContent" className={ className.sidebar }>
+      <div className={ className.sidebar }>
         <div className={ className.container } >
 
           <div className="col-auto">

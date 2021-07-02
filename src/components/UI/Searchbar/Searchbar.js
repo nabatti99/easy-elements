@@ -1,5 +1,7 @@
 import withUrlController from "../../WithUrlController/WithUrlController";
 
+import ButtonOutline from "../ButtonOutline/ButtonOutline";
+
 /**
  * @param value: String
  * @param changed: handleFunction
@@ -17,13 +19,15 @@ const searchBar = props => (
             <i className="ri-search-2-line"></i>
           </label>
           <input 
-            className="form-control bg-transparent border-0 shadow-none p-1" 
+            className="form-control bg-transparent border-0 shadow-none p-1 me-4" 
             type="url" 
             id="SearchUrl" 
             name="url" 
-            placeholder="Put your URL here"
+            placeholder="Put Artlist's URL here"
             value={ props.value }
             onChange={ props.changed } />
+            <ButtonOutline
+              textColor="dark">Search</ButtonOutline>
         </div>
       </form>
 

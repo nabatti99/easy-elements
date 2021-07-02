@@ -1,14 +1,15 @@
 import { Component } from "react";
+import Waveform from "../../UI/Waveform/Waveform";
 
 /**
  * @param thumbnail Source[Image],
  * @param name: String,
  * @param playlist: String
  * @param genres: Array[String]
- * @param music: Source[Music]
  * @param process: Number
  * @param isPlaying: Boolean
  * 
+ * @param downloaded: Download Event
  * @param toggled: Play/Pause Event
  */
 class MusicItem extends Component {
@@ -20,9 +21,9 @@ class MusicItem extends Component {
       name, 
       playlist,
       genres,
-      music,
       process,
       isPlaying,
+      peaks,
 
       toggled
     } = this.props;
@@ -34,7 +35,7 @@ class MusicItem extends Component {
       containerLeft: "row align-items-center h-100",
       playIcon: `${controlIconNameClassName} fs-3 text-dark cursor-pointer color-primary-hover transition-normal`,
       downloadIcon: "ri-download-fill",
-      download: "text-decoration-none fs-4 text-dark color-primary-hover transition-normal",
+      download: "fs-4 text-dark cursor-pointer color-primary-hover transition-normal",
       musicName: "text-dark d-block text-decoration-none mb-2",
       playlistName: "text-gray-light d-block text-decoration-none m-0",
       genres: "d-inline-block link-gray text-decoration-none mb-0 me-2",
@@ -48,7 +49,7 @@ class MusicItem extends Component {
     return (
       <div className="row py-4">
 
-        <div className="col-2">
+        <div className="col-md-2 d-md-flex d-none">
           <div className={ className.container }>
             <div className="col-auto">
               <img src={ thumbnail } height="80px" alt="Thumbnail" />
@@ -56,7 +57,7 @@ class MusicItem extends Component {
           </div>
         </div>
 
-        <div className="col-1">
+        <div className="col-md-1 col-1">
           <div className={ className.container }>
             <div className="col-auto">
               <i className={ className.playIcon } onClick={ toggled }></i>
@@ -64,16 +65,16 @@ class MusicItem extends Component {
           </div>
         </div>
 
-        <div className="col-2">
+        <div className="col-md-2 col-4">
           <div className={ className.containerLeft }>
             <div className="col-auto">
-              <a className={ className.musicName } href="#">{ name }</a>
+              <a className={ className.musicName } href={ `/music/${this.props.id}` }>{ name }</a>
               <a className={ className.playlistName }>{ playlist }</a>
             </div>
           </div>
         </div>
 
-        <div className="col-3">
+        <div className="col-md-3 col-2">
           <div className={ className.container }>
             <div className="col-auto">
               { genresLink }
@@ -81,22 +82,25 @@ class MusicItem extends Component {
           </div>
         </div>
 
-        <div className="col-3">
+        <div className="col-md-3 col-4">
           <div className={ className.container }>
             <div className="col">
-              <div className="progress">
-                  <div className={ className.sufferWave } role="progressbar" style={{ width: `${process}%` }}></div>
-              </div>
+              <Waveform
+                peaks={ peaks }
+                bgColor="#808080"
+                waveColor="#FFD500"
+                process={ process }
+                clicked={ () => {} } />
             </div>
           </div>
         </div>
 
-        <div className="col-1">
+        <div className="col-md-1 col-1">
           <div className={ className.container }>
             <div className="col-auto">
-              <a href={ music } className={ className.download } target="_blank" rel="noopener noreferrer" download>
+              <div className={ className.download } onClick={ this.props.downloaded } >
                 <i className={ className.downloadIcon }></i>
-              </a>
+              </div>
             </div>
           </div>
         </div>

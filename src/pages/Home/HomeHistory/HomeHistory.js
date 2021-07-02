@@ -1,10 +1,30 @@
 import { Component, Fragment } from "react";
 
+import { getTopNewMusics } from "../../../utilities/url";
+
 import Logo from "../../../assets/images/logo.png";
 import classes from "./HomeHistory.module.scss";
 import MusicList from "../../../components/Music/MusicList/MusicList";
 
 class History extends Component {
+
+  state = {
+    loading: true,
+    idsList: null,
+    error: null
+  }
+
+  componentDidMount () {
+    getTopNewMusics(5)
+    .then(response => {
+      console.log(response);
+
+      this.setState({ loading: false, idsList: response.data });
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
 
   render () {
 
@@ -31,13 +51,13 @@ class History extends Component {
             </div>
 
             <div className="col-auto">
-              {/* <MusicList /> */}
+              { !this.state.loading && <MusicList idsList={ this.state.idsList } /> }
             </div>
 
             <div className="col-auto py-5">
               <p className={ className.linkArea }>
                 Continue at&nbsp;
-                <a className={ className.link } href="#">Histories</a>&nbsp;
+                <a className={ className.link } href="/history">Histories</a>&nbsp;
                 sections...</p>
             </div>
           </div>
@@ -52,8 +72,7 @@ class History extends Component {
               <div className="col-auto">
                 <p className={ className.linkFooter }>
                   Made by Minh from&nbsp;
-                  <a className={ className.link } href="https://www.facebook.com/HUGOClub">Hugo English Club</a>&nbsp;
-                  .
+                  <a className={ className.link } href="https://www.facebook.com/HUGOClub">Hugo English Club</a>&nbsp;.
                 </p>
               </div>
             </div>

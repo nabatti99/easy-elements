@@ -5,21 +5,6 @@ import MusicController from "../MusicController/MusicController";
 
 class MusicList extends Component {
 
-  state = {
-    loading: true,
-    idsList: null
-  }
-
-  componentDidMount () {
-    setTimeout(() => {
-      this.setState({ 
-        // idsList: [9633, 34438, 16569, 57337, 63617], 
-        idsList: [9633, 34438, 16569], 
-        loading: false 
-      });
-    }, 500);
-  }
-
   render () {
 
     let musicElementsList = null;
@@ -29,12 +14,11 @@ class MusicList extends Component {
       item: `border-bottom border-gray-light ${classes.Item}`
     }
 
-    if (!this.state.loading)
-      musicElementsList = this.state.idsList && this.state.idsList.map(id => (
-        <li className={ className.item } key={ id }>
-          <MusicController id={ id } />
-        </li>
-      ));
+    musicElementsList = this.props.idsList && this.props.idsList.map(id => (
+      <li className={ className.item } key={ id }>
+        <MusicController id={ id } />
+      </li>
+    ));
 
     return (
       <ul className={ className.container }>

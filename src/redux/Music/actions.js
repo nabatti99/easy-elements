@@ -7,10 +7,10 @@ import * as actionsType from "./types";
  * @param playlist String
  * @param music string
  */
-export const playNewMusic = (id, thumbnail, name, playlist, music) => {
+export const playNewMusic = (id, thumbnail, name, playlist, music, peaks) => {
   return {
     type: actionsType.PLAY_NEW_MUSIC,
-    id, thumbnail, name, playlist, music
+    id, thumbnail, name, playlist, music, peaks
   }
 }
 

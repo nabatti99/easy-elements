@@ -5,18 +5,11 @@ import { parseTime, parseProcess, parseVolumeByClientX } from "../../../utilitie
 import MusicFloating from "../MusicFloating/MusicFloating";
 
 import * as actions from "../../../redux/Music/actions";
+import { generateDownloadMusicFromURL } from "../../../utilities/url";
 
 class MusicFloatingController extends Component {
 
-  constructor (props) {
-    super(props);
-
-    console.log("init");
-  }
-
   audio = new Audio();
-
-  baseVolumeClientX = 0;
 
   state = {
     loadingAudio: false,
@@ -25,6 +18,8 @@ class MusicFloatingController extends Component {
     process: 0,
     volume: 1
   }
+
+  createVolumeElementRef = volumeElement => this.volumeElementRef = volumeElement;
 
   componentDidMount () {
     console.log("attach event");
@@ -36,16 +31,11 @@ class MusicFloatingController extends Component {
     this.audio.onended = this.handleAudioEnded;
   }
 
-  setBaseVolumeClientX = (clientX) => {
-    this.baseClientXVolume = clientX;
-  }
-
   handleDragVolume = (event) => {
     console.log("Dragging");
-    const thumbElement = event.target;
-    const volumeElement = thumbElement.parentElement;
 
-    this.audio.volume = parseVolumeByClientX(this.baseClientXVolume, event.clientX, volumeElement.clientWidth);
+    const baseClientXVolume = this.volumeElementRef.getClientRects()[0].x;
+    this.audio.volume = parseVolumeByClientX(baseClientXVolume, event.clientX, this.volumeElementRef.clientWidth);
   }
 
   handleLoadStartAudioData = () => {
@@ -84,9 +74,6 @@ class MusicFloatingController extends Component {
   }
 
   componentDidUpdate () {
-    console.log("did update");
-    console.log(this.state);
-
     if (this.props.isPlaying === this.audio.paused)
       if (this.props.isPlaying)
         this.audio.play();
@@ -119,24 +106,32 @@ class MusicFloatingController extends Component {
     }
   }
 
+  handleDownloadMusic = () => {
+    generateDownloadMusicFromURL(this.props.music, `${this.props.name}.mp3`);
+  }
+
+  handleClickWaveform = (newProcess) => {
+    this.audio.currentTime = newProcess * this.audio.duration;
+  }
+
   render () {
-
-    console.log("render");
-    console.log(this.audio);
-
     return (
       this.props.id && <MusicFloating
+        id={ this.props.id }
         thumbnail={ this.props.thumbnail }
         timer={ `${this.state.currentTime}/${this.state.duration}` }
         name={ this.props.name }
         playlist={ this.props.playlist }
         music={ this.props.music }
+        peaks={ this.props.peaks }
         volume={ this.state.volume }
         isPlaying={ this.props.isPlaying }
         process={ this.state.process }
         toggled={ this.handleToggle }
-        setBaseVolumeClientX={ this.setBaseVolumeClientX }
-        draggedVolume={ this.handleDragVolume } />
+        draggedVolume={ this.handleDragVolume }
+        clickedWaveform={ this.handleClickWaveform }
+        downloaded={ this.handleDownloadMusic }
+        volumeElementRef={ this.createVolumeElementRef } />
     );
   }
 }
@@ -149,7 +144,8 @@ const mapStateToProps = state => {
     playlist: state.music.playlist,
   
     isPlaying: state.music.isPlaying,
-    music: state.music.music
+    music: state.music.music,
+    peaks: state.music.peaks
   }
 }
 

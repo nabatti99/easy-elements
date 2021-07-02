@@ -1,22 +1,13 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 
 import classes from "./MusicFloating.module.scss";
+import Waveform from "../../UI/Waveform/Waveform";
 
 class MusicFloating extends Component {
 
-  baseWidthVolumeElement = 0;
+  createWaveSurferRef = waveSurferElement => this.waveSurferRef = waveSurferElement;
 
   componentDidMount() {
-    const baseClientXVolume = document
-                              .querySelector(`.${classes.Thumb}`)
-                              .getClientRects()[0].x;
-
-    this.props.setBaseVolumeClientX(baseClientXVolume);
-
-    this.baseWidthVolumeElement = document
-                              .querySelector(`.${classes.Volume}`)
-                              .getClientRects()[0].width;
-
     document.addEventListener("dragover", (event) => {
       event.preventDefault();
     }, false);
@@ -25,29 +16,34 @@ class MusicFloating extends Component {
   render () {
 
     const { 
+      id,
       thumbnail, 
       name, 
       playlist,
-      music,
       process,
       volume,
       isPlaying,
       timer,
+      peaks,
+      volumeElementRef,
 
       toggled,
-      draggedVolume
+      draggedVolume,
+      clickedWaveform,
+      downloaded
     } = this.props;
 
     const controlIconNameClassName = isPlaying ? "ri-pause-fill" : "ri-play-fill";
 
     const className = {
-      container: "row justify-content-center align-items-center h-100",
+      container: "row justify-content-center align-items-center h-100 transition-normal",
       containerLeft: "row align-items-center h-100",
       containerRight: "row justify-content-end align-items-center h-100",
       playIcon: `${controlIconNameClassName} fs-3 text-dark cursor-pointer color-primary-hover transition-normal`,
       timer: "",
       downloadIcon: "ri-download-fill",
-      download: "text-decoration-none fs-4 text-dark color-primary-hover transition-normal",
+      volumeIcon: "ri-speaker-fill fs-4 text-dark",
+      download: "fs-4 text-dark cursor-pointer color-primary-hover transition-normal",
       musicName: "text-dark d-block text-decoration-none mb-2",
       playlistName: "text-gray-light d-block text-decoration-none m-0",
       genres: "d-inline-block link-gray text-decoration-none mb-0 me-2",
@@ -80,7 +76,7 @@ class MusicFloating extends Component {
           <div className="col-3">
             <div className={ className.containerLeft }>
               <div className="col-auto">
-                <a className={ className.musicName } href="#">{ name }</a>
+                <a className={ className.musicName } href={ `/music/${id}` }>{ name }</a>
                 <a className={ className.playlistName }>{ playlist }</a>
               </div>
             </div>
@@ -89,9 +85,12 @@ class MusicFloating extends Component {
           <div className="col-3">
             <div className={ className.container }>
               <div className="col">
-                <div className="progress">
-                    <div className={ className.sufferWave } role="progressbar" style={{ width: `${process}%` }}></div>
-                </div>
+                <Waveform
+                  peaks={ peaks }
+                  bgColor="#808080"
+                  waveColor="#FFD500"
+                  process={ process }
+                  clicked={ clickedWaveform } />
               </div>
             </div>
           </div>
@@ -99,9 +98,9 @@ class MusicFloating extends Component {
           <div className="col-1">
             <div className={ className.container }>
               <div className="col-auto">
-                <a href={ music } className={ className.download } target="_blank" rel="noopener noreferrer" download>
+                <div className={ className.download } onClick={ downloaded }>
                   <i className={ className.downloadIcon }></i>
-                </a>
+                </div>
               </div>
             </div>
           </div>
@@ -109,11 +108,14 @@ class MusicFloating extends Component {
           <div className="col-2">
             <div className={ className.container }>
               <div className="col-auto">
-                <div className={ classes.Volume }>
+                <i className={ className.volumeIcon }></i>
+              </div>
+              <div className="col-auto">
+                <div className={ classes.Volume } ref={ volumeElementRef }>
                   <div 
                     className={ classes.Thumb } draggable
                     onDrag={ draggedVolume }
-                    style={{ left: this.baseWidthVolumeElement * volume }}></div>
+                    style={{ left: `${volume * 100}%` }}></div>
                 </div>
               </div>
             </div>
@@ -133,9 +135,12 @@ class MusicFloating extends Component {
  * @param process: Number
  * @param isPlaying: Boolean
  * @param timer: String
+ * @param peaks: Array[Number]
  * 
  * @param toggled: Play/Pause Event
- * @param setBeginVolumeClientX: Get Volume ClientX
+ * @param volumeElementRef: Create Ref
+ * @param waveSurferElementRef: Create Ref
  * @param draggedVolume: Drag Volume Event
+ * @param clickedWaveform: Click Waveform Event
  */
 export default MusicFloating;

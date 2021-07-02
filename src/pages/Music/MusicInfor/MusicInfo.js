@@ -22,7 +22,7 @@ const musicInfo = props => {
   }
 
   return (
-    <div>
+    <div className={ classes.Background }>
       <div className="container">
         <div className="row">
 
@@ -63,6 +63,8 @@ const musicInfo = props => {
 
         </div>
       </div>
+
+      <div style={{ height: "100px" }}></div>
     </div>
   );
 }

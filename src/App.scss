@@ -10,6 +10,27 @@
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 // My Custom
+body {
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: $light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary;
+  }
+}
+
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    background-color: $light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #C0C0C0;
+  }
+}
 
 // Remove bg-autofill chrome
 input:-webkit-autofill {

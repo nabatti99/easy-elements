@@ -1,11 +1,14 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import firebaseAxios from "../../../axios/firebase.axios";
+import axios from "axios";
 // import axios from "axios";
 
 import MusicItem from "../MusicItem/MusicItem";
+import Loading from "../../UI/Loading/Loading";
 
 import * as actions from "../../../redux/Music/actions";
+import { generateDownloadMusicFromURL } from "../../../utilities/url";
 
 class MusicController extends Component {
 
@@ -18,23 +21,31 @@ class MusicController extends Component {
     name: "",
     playlist: "",
     music: "",
-    genres: []
+    genres: [],
+    peaks: []
   }
 
   componentDidMount () {
     firebaseAxios.get(`/history/${ this.props.id }.json`)
     .then(response => {
-      const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName } = response.data;
+      const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName, waveSurferFilePath } = response.data;
       const genres = genreCategories.map(genreCategorie => genreCategorie.name);
-      
-      this.setState({
-        loading: false,
-        thumbnail: albumThumbFilePath,
-        name: songBaseName,
-        playlist: albumName,
-        music: MP3FilePath,
-        genres
-      });
+
+      return axios.get(waveSurferFilePath)
+      .then(response => {
+        return {
+          loading: false,
+          thumbnail: albumThumbFilePath,
+          name: songBaseName,
+          playlist: albumName,
+          music: MP3FilePath,
+          genres,
+          peaks: response.data
+        };
+      })
+    })
+    .then(response => {
+      this.setState(response);
     })
     .catch(error => {
       console.error(error);
@@ -60,7 +71,6 @@ class MusicController extends Component {
   }
 
   componentDidUpdate () {
-    console.log(this.state);
   }
 
   handleToggle = () => {
@@ -77,23 +87,35 @@ class MusicController extends Component {
         this.state.thumbnail, 
         this.state.name, 
         this.state.playlist, 
-        this.state.music
+        this.state.music,
+        this.state.peaks
       );
     }
+  }
+
+  handleDownloadMusic = () => {
+    generateDownloadMusicFromURL(this.state.music, `${this.state.name}.mp3`);
   }
 
   render () {
 
     return (
-      <MusicItem
+      this.state.loading
+      ? <div className="py-5">
+          <Loading loadingColor="gray"textColor="gray" />
+        </div> 
+      : <MusicItem
+        id={ this.props.id }
         thumbnail={ this.state.thumbnail }
         name={ this.state.name }
         playlist={ this.state.playlist }
         genres={ this.state.genres }
         music={ this.state.music }
+        peaks={ this.state.peaks }
         isPlaying={ this.state.isFocus ? this.props.isPlaying : false }
         process={ this.state.isFocus ? this.props.process : 0 }
-        toggled={ this.handleToggle } />
+        toggled={ this.handleToggle }
+        downloaded={ this.handleDownloadMusic } />
     );
   }
 }
@@ -108,7 +130,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlayNewMusic: (id, thumbnail, name, playlist, music) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music)),
+    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music, peaks)),
     onPlay: () => dispatch(actions.playMusic()),
     onPause: () => dispatch(actions.pauseMusic())
   }

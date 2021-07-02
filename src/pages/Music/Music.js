@@ -1,18 +1,26 @@
 import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import firebaseAxios from "../../axios/firebase.axios";
-import { checkMusicExistFirebase, status, putNewMusicToFirebase, generateDownloadMusicFromURL } from "../../utilities/url";
+import axios from "axios";
+import { 
+  checkMusicExistFirebase, 
+  status, 
+  getMusicFromFirebase,
+  putNewMusicToFirebase, 
+  generateDownloadMusicFromURL,
+  createTimestamp } from "../../utilities/url";
 import * as actions from "../../redux/Music/actions";
 
 import MusicHeader from "./MusicHeader/MusicHeader";
 import MusicInfo from "./MusicInfor/MusicInfo";
+import Loading from "../../components/UI/Loading/Loading";
 
 class Music extends Component {
 
   state = {
     loading: true,
     error: null,
+    message: "Initiating...",
 
 
     name: "",
@@ -31,37 +39,39 @@ class Music extends Component {
 
   getMusic = async (id) => {
     // Update to Firebase Pipeline
+    this.setState({ message: "Checking the music ..." })
     return checkMusicExistFirebase(id)
-    .then(isExist => { // Check the music existed in Firebase
-      if (isExist)
-        return {
-          status: status.EXIST_IN_FIREBASE,
-          message: `The music has id = ${id} has exist in firebase`
-        };
-      else // If no, update new music data
-        return putNewMusicToFirebase(id)
-          .then(response => {
-          console.log(response);
+    .then(response => { // Check the music existed in Firebase
+      console.log(response);
+      switch (response.statusText) {
+        case status.EXIST_IN_FIREBASE:
           return {
-            status: status.PUT_TO_FIREBASE_OK,
-            message: "OK"
-          }
-        });
+            statusText: status.EXIST_IN_FIREBASE,
+            message: `The music has id = ${id} has exist in firebase`
+          };
+
+        case status.NOT_EXIST_IN_FIREBASE:
+          this.setState({ message: "Getting your music from Artlist.io..." })
+          return putNewMusicToFirebase(id);
+
+        default:
+          console.log(response);
+          throw new Error("Incorrect Status Text");
+      }
     })
     .then(response => { // Load music data to Page
       console.log(response);
-      switch (response.status) {
+      this.setState({ message: "The music has been successfully got" });
+      switch (response.statusText) {
         case status.PUT_TO_FIREBASE_OK:
         case status.EXIST_IN_FIREBASE:
-          return firebaseAxios.get(`https://learning-easy-661d1.firebaseio.com/history/${id}.json`)
+
+          createTimestamp(id);
+          return getMusicFromFirebase(id) // Get music detail from Firebase
 
         default:
           throw new Error("Unknown status text");
       }
-    })
-    .catch(error => {
-      console.error(error);
-      this.setState({ loading: false, error: error });
     });
   }
 
@@ -77,7 +87,8 @@ class Music extends Component {
         songBaseName, MP3FilePath, albumCoverFilePath, 
         albumThumbFilePath, albumName, artistName, 
         albumId, artistId, similarSongs, 
-        albumImageFilePath, categories } = response.data;
+        albumImageFilePath, categories, peaks 
+      } = response.data;
 
       const parsedCategories = categories.reduce((result, category) => {
         result[category.parentName] = result[category.parentName] || [];
@@ -107,14 +118,19 @@ class Music extends Component {
         categories: parsedCategories,
         playlistId: albumId,
         music: MP3FilePath,
+        peaks: peaks,
 
         loading: false,
         error: null
       });
 
-      // this.props.onPlayNewMusic(this.state.id, albumThumbFilePath, songBaseName, albumName, MP3FilePath);
-      // this.props.onPause();
-    });
+      console.log(peaks);
+      this.props.onPlayNewMusic(this.state.id, albumThumbFilePath, songBaseName, albumName, MP3FilePath, peaks);
+      this.props.onPause();
+    })
+    .catch(error => {
+      this.setState({ loading: false, error: error, message: "Oops, something went wrong!" });
+    });;
   }
 
   handleToggleButton = () => {
@@ -138,37 +154,47 @@ class Music extends Component {
       info: "col-auto p-0"
     }
 
-    const pageContain = false && (
-      <Fragment>
-        <div className={ className.header }>
-            <MusicHeader
-              title={ this.state.name }
-              artist={ this.state.artist }
-              artistId={ this.state.artistId }
-              bgUrl={ this.state.urlCover }
-              isPlaying={ this.props.isPlaying }
-              toggled={ this.handleToggleButton }
-              downloaded={ this.handleDownloadMusic }
-              shared={ null } />
-          </div>
+    let pageContain = null
 
-          <div className={ className.info }>
-            <MusicInfo
-              categories={ this.state.categories }
-              urlImagePlaylist={ this.state.urlPlaylistImage }
-              playlistId={ this.state.playlistId }
-              relatedMusics={ this.state.relatedMusics } />
-          </div>
-      </Fragment>
-    )
+    if (this.state.loading) {
+      pageContain = (
+        <div className="mt-5 pt-5">
+          <Loading 
+            loadingColor="dark"
+            textColor="dark" >{ this.state.message }</Loading>
+        </div>
+      );
+    } else {
+      pageContain = (
+        <Fragment>
+          <div className={ className.header }>
+              <MusicHeader
+                title={ this.state.name }
+                artist={ this.state.artist }
+                artistId={ this.state.artistId }
+                bgUrl={ this.state.urlCover }
+                isPlaying={ this.props.isPlaying }
+                toggled={ this.handleToggleButton }
+                downloaded={ this.handleDownloadMusic }
+                shared={ null } />
+            </div>
+  
+            <div className={ className.info }>
+              <MusicInfo
+                categories={ this.state.categories }
+                urlImagePlaylist={ this.state.urlPlaylistImage }
+                playlistId={ this.state.playlistId }
+                relatedMusics={ this.state.relatedMusics } />
+            </div>
+        </Fragment>
+      )
+    }
 
     return (
       <div className={ className.music }>
         <div className={ className.container }>
 
           { pageContain }
-
-          <div style={{ height: "100px" }}></div>
           
         </div>
       </div>
@@ -184,7 +210,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlayNewMusic: (id, thumbnail, name, playlist, music) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music)),
+    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music, peaks)),
     onPlay: () => dispatch(actions.playMusic()),
     onPause: () => dispatch(actions.pauseMusic())
   }
