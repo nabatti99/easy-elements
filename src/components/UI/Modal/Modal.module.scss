@@ -1,0 +1,16 @@
+@import "../../../scss/variables";
+
+.Modal {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $zindex-modal-backdrop;
+  width: 100%;
+  height: 100%;
+
+  &.Show {
+    visibility: visible;
+  }
+
+}

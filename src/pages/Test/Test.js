@@ -1,10 +1,17 @@
 import { Component } from "react";
-import Waveform from "../../components/UI/Waveform/Waveform";
+
+import Modal from "../../components/UI/Modal/Modal";
 
 class Test extends Component {
 
   render () {
-    return <Waveform />
+    return <div>
+      <Modal 
+        title="Test"
+        content="123123123"
+        show/>
+      <h1>123123flsdjflajsdlfjsldjflskjflsjflkasdjfsaidjflksfmlaf</h1>
+    </div>
   }
 }
 

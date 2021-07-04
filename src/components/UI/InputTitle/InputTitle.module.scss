@@ -19,8 +19,8 @@
     color: $primary;
   }
 
-  & .Input:focus {
-    & ~ .Button {
+  &:hover {
+    & .Button {
       visibility: visible;
     }
   }

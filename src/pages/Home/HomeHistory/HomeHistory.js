@@ -1,10 +1,13 @@
 import { Component, Fragment } from "react";
+import { connect } from "react-redux";
 
 import { getTopNewMusics } from "../../../utilities/url";
 
-import Logo from "../../../assets/images/logo.png";
 import classes from "./HomeHistory.module.scss";
 import MusicList from "../../../components/Music/MusicList/MusicList";
+
+import { pushToast } from "../../../redux/Toast/actions";
+import * as statusText from "../../../redux/Toast/statusTexts";
 
 class History extends Component {
 
@@ -22,7 +25,13 @@ class History extends Component {
       this.setState({ loading: false, idsList: response.data });
     })
     .catch(error => {
-      console.log(error);
+      this.props.onPushToast(
+        error.message, null, 
+        "Please check your network and try to reload this page.", 
+        statusText.ERROR
+      );
+
+      this.setState({ error: error.message });
     })
   }
 
@@ -41,8 +50,8 @@ class History extends Component {
       linkFooter: "text-gray mt-3 m-0"
     }
 
-    return (
-      <Fragment>
+    return !this.state.error
+      ? (
         <div className={ className.background }>
           <div className={ className.container }>
             <div className="col-auto mb-5">
@@ -62,25 +71,20 @@ class History extends Component {
             </div>
           </div>
         </div>
-
-        <div className={ className.footer }>
-          <div className={ className.container }>
-            <div className="row flex-column py-5">
-              <div className="col-auto">
-                <img src={ Logo } height={40} />
-              </div>
-              <div className="col-auto">
-                <p className={ className.linkFooter }>
-                  Made by Minh from&nbsp;
-                  <a className={ className.link } href="https://www.facebook.com/HUGOClub">Hugo English Club</a>&nbsp;.
-                </p>
-              </div>
-            </div>
-          </div>
+      )
+      : (
+        <div className="container py-5 text-center text-gray-light">
+          <h1><i className="ri-emotion-sad-line"></i></h1>
+          <h2 className="fw-bold ls-95">{ this.state.error }</h2>
         </div>
-      </Fragment>
-    );
+      )
   }
 }
 
-export default History
+const mapDispatchToProps = dispatch => {
+  return {
+    onPushToast: (header, subHeader, content, statusText) => dispatch(pushToast(header, subHeader, content, statusText))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(History);

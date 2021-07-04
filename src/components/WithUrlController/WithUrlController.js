@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { withRouter } from "react-router";
 
-import { getIdFromUrl, checkMusicExistFirebase, putNewMusicToFirebase, status } from "../../utilities/url";
+import { getIdFromUrl } from "../../utilities/url";
 
 const withUrlController = Searchbar => {
   class WithUrlController extends Component {
@@ -27,6 +27,7 @@ const withUrlController = Searchbar => {
       }
 
       this.props.history.push(`/music/${id}`);
+      console.log(this.props.history);
     }
   
     render () {

@@ -3,6 +3,7 @@ import { Component } from "react";
 import classes from "./Layout.module.scss";
 import Navigation from "../../components/Navigation/Navigation";
 import MusicFloatingController from "../../components/Music/MusicFloatingController/MusicFloatingController";
+import Toast from "../../components/UI/Toast/Toast";
 class Layout extends Component {
 
   render() {
@@ -20,6 +21,7 @@ class Layout extends Component {
         </div>
 
         <MusicFloatingController />
+        <Toast />
       </div>
     );
   }

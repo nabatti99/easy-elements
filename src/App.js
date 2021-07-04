@@ -9,7 +9,7 @@ import store from "./redux/store";
 import Layout from "./containers/Layout/Layout";
 import Home from "./pages/Home/Home";
 import Music from "./pages/Music/Music";
-import ErrorPage from "./pages/Error/Error";
+import Page404Error from "./pages/Page404Error/Page404Error";
 import Test from "./pages/Test/Test";
 
 function App() {
@@ -23,9 +23,9 @@ function App() {
             
             <Switch>
               <Route path="/music/:id" exact component={ Music } />
-              <Route path="/error" component={ ErrorPage } />
               <Route path="/test" component={ Test } />
               <Route path="/" exact component={ Home } />
+              <Route path="*" component={ Page404Error } />
             </Switch>
 
           </Layout>

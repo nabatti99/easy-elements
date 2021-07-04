@@ -1,7 +1,6 @@
 import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import axios from "axios";
 import { 
   checkMusicExistFirebase, 
   status, 
@@ -9,11 +8,14 @@ import {
   putNewMusicToFirebase, 
   generateDownloadMusicFromURL,
   createTimestamp } from "../../utilities/url";
-import * as actions from "../../redux/Music/actions";
+import { playNewMusic, playMusic, pauseMusic } from "../../redux/Music/actions";
+import { pushToast } from "../../redux/Toast/actions";
+import * as statusText from "../../redux/Toast/statusTexts";
 
 import MusicHeader from "./MusicHeader/MusicHeader";
 import MusicInfo from "./MusicInfor/MusicInfo";
 import Loading from "../../components/UI/Loading/Loading";
+import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
 
 class Music extends Component {
 
@@ -75,9 +77,14 @@ class Music extends Component {
     });
   }
 
-  componentDidMount() {
-
+  loadPage = () => {
     const { id } = this.props.match.params;
+
+    if (isNaN(id)) {
+      this.props.history.replace("/404-Not-Found");
+      return;
+    }
+
     this.setState({ loading: true, id });
 
     this.getMusic(id)
@@ -124,13 +131,33 @@ class Music extends Component {
         error: null
       });
 
-      console.log(peaks);
       this.props.onPlayNewMusic(this.state.id, albumThumbFilePath, songBaseName, albumName, MP3FilePath, peaks);
       this.props.onPause();
     })
     .catch(error => {
-      this.setState({ loading: false, error: error, message: "Oops, something went wrong!" });
-    });;
+      this.setState({ loading: false, error: error.message, message: "Oops, something went wrong!" });
+      this.props.onPushToast(
+        error.message, "", 
+        <div>
+          <p>Oops, something went wrong!</p>
+          <p>Please <span className="text-danger">check your Network</span> and try to <span className="text-danger">reload</span> this page.</p>
+          <i>If the error is still there, contact Minh for more information.</i>
+        </div>, 
+        statusText.ERROR
+      )
+    });
+  }
+
+  componentDidMount() {
+    this.loadPage();
+  }
+
+  componentDidUpdate() {
+
+    if (this.state.id === this.props.match.params.id)
+      return;
+
+    this.loadPage();
   }
 
   handleToggleButton = () => {
@@ -165,39 +192,49 @@ class Music extends Component {
         </div>
       );
     } else {
-      pageContain = (
-        <Fragment>
-          <div className={ className.header }>
-              <MusicHeader
-                title={ this.state.name }
-                artist={ this.state.artist }
-                artistId={ this.state.artistId }
-                bgUrl={ this.state.urlCover }
-                isPlaying={ this.props.isPlaying }
-                toggled={ this.handleToggleButton }
-                downloaded={ this.handleDownloadMusic }
-                shared={ null } />
-            </div>
-  
-            <div className={ className.info }>
-              <MusicInfo
-                categories={ this.state.categories }
-                urlImagePlaylist={ this.state.urlPlaylistImage }
-                playlistId={ this.state.playlistId }
-                relatedMusics={ this.state.relatedMusics } />
-            </div>
-        </Fragment>
-      )
+      if (this.state.error)
+        pageContain = (
+          <div className="container py-5 text-center text-gray-light">
+            <h1><i className="ri-emotion-sad-line"></i></h1>
+            <h2 className="fw-bold ls-95">{ this.state.error }</h2>
+          </div>
+        );
+      else
+        pageContain = (
+          <Fragment>
+            <div className={ className.header }>
+                <MusicHeader
+                  title={ this.state.name }
+                  artist={ this.state.artist }
+                  artistId={ this.state.artistId }
+                  bgUrl={ this.state.urlCover }
+                  isPlaying={ this.props.isPlaying }
+                  toggled={ this.handleToggleButton }
+                  downloaded={ this.handleDownloadMusic }
+                  shared={ null } />
+              </div>
+    
+              <div className={ className.info }>
+                <MusicInfo
+                  categories={ this.state.categories }
+                  urlImagePlaylist={ this.state.urlPlaylistImage }
+                  playlistId={ this.state.playlistId }
+                  relatedMusics={ this.state.relatedMusics } />
+              </div>
+          </Fragment>
+        )
     }
 
     return (
-      <div className={ className.music }>
-        <div className={ className.container }>
+      <ErrorBoundary>
+        <div className={ className.music }>
+          <div className={ className.container }>
 
-          { pageContain }
-          
+            { pageContain }
+            
+          </div>
         </div>
-      </div>
+      </ErrorBoundary>
     );
   }
 }
@@ -210,9 +247,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music, peaks)),
-    onPlay: () => dispatch(actions.playMusic()),
-    onPause: () => dispatch(actions.pauseMusic())
+    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(playNewMusic(id, thumbnail, name, playlist, music, peaks)),
+    onPlay: () => dispatch(playMusic()),
+    onPause: () => dispatch(pauseMusic()),
+    onPushToast: (header, subHeader, content, statusText) => dispatch(pushToast(header, subHeader, content, statusText))
   }
 }
 

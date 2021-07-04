@@ -1,6 +1,5 @@
+import classes from "./Searchbar.module.scss";
 import withUrlController from "../../WithUrlController/WithUrlController";
-
-import ButtonOutline from "../ButtonOutline/ButtonOutline";
 
 /**
  * @param value: String
@@ -11,7 +10,7 @@ const searchBar = props => (
   <div className="row align-items-center h-100">
     <div className="col">
 
-      <form onSubmit={ props.submitted }>
+      <form onSubmit={ props.submitted } className={ classes.Form }>
         <div className="input-group">
           <label 
             htmlFor="SearchUrl" 
@@ -26,8 +25,7 @@ const searchBar = props => (
             placeholder="Put Artlist's URL here"
             value={ props.value }
             onChange={ props.changed } />
-            <ButtonOutline
-              textColor="dark">Search</ButtonOutline>
+          <button className={ `btn text-gray fw-semi-bold ls-95 ${classes.Button}` }>Search</button>
         </div>
       </form>
 
