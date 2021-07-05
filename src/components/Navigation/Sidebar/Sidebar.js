@@ -35,8 +35,8 @@ class Sidebar extends Component {
 
           <div className="col-auto mb-4">
             <dd><a className={ className.link } href="/">Get your musics</a></dd>
-            <dd><a className={ className.link } href="#">Histories</a></dd>
-            <dd><a className={ className.linkDisabled }>Moods</a></dd>
+            <dd><a className={ className.link } href="/history">History</a></dd>
+            <dd><a className={ className.linkDisabled } href="/moods">Moods</a></dd>
           </div>
 
           <div className="col-auto mt-auto">

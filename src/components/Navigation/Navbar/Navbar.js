@@ -12,7 +12,7 @@ class Navbar extends Component {
       navbar: `navbar navbar-expand-md border-bottom position-fixed top-0 start-0 bg-glass vw-100 ${classes.Navbar}`,
       button: "navbar-toggler d-flex shadow-none me-4",
       container: `container-fluid justify-content-start`,
-      menuIcon: "ri-menu-line ri-lg",
+      menuIcon: `${this.props.isShowed ? "ri-close-line text-primary" : "ri-menu-line"} ri-lg`,
       collapse: "collapse navbar-collapse",
       itemsList: "list-group list-group-horizontal",
       itemArea: "list-group-item bg-transparent border-0 p-0"

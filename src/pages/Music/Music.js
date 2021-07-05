@@ -15,6 +15,7 @@ import * as statusText from "../../redux/Toast/statusTexts";
 import MusicHeader from "./MusicHeader/MusicHeader";
 import MusicInfo from "./MusicInfor/MusicInfo";
 import Loading from "../../components/UI/Loading/Loading";
+import SadFace from "../../components/UI/SadFace/SadFace";
 import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
 
 class Music extends Component {
@@ -193,12 +194,10 @@ class Music extends Component {
       );
     } else {
       if (this.state.error)
-        pageContain = (
-          <div className="container py-5 text-center text-gray-light">
-            <h1><i className="ri-emotion-sad-line"></i></h1>
-            <h2 className="fw-bold ls-95">{ this.state.error }</h2>
-          </div>
-        );
+        pageContain = <SadFace 
+          iconSize={1} 
+          faceColor="gray" 
+          textColor="gray" >{ this.state.error }</SadFace>;
       else
         pageContain = (
           <Fragment>

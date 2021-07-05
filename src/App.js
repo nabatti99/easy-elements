@@ -10,6 +10,8 @@ import Layout from "./containers/Layout/Layout";
 import Home from "./pages/Home/Home";
 import Music from "./pages/Music/Music";
 import Page404Error from "./pages/Page404Error/Page404Error";
+import History from "./pages/History/History";
+
 import Test from "./pages/Test/Test";
 
 function App() {
@@ -23,8 +25,9 @@ function App() {
             
             <Switch>
               <Route path="/music/:id" exact component={ Music } />
-              <Route path="/test" component={ Test } />
               <Route path="/" exact component={ Home } />
+              <Route path="/history" exact component={ History } />
+              <Route path="/test" component={ Test } />
               <Route path="*" component={ Page404Error } />
             </Switch>
 

@@ -6,6 +6,7 @@ import axios from "axios";
 
 import MusicItem from "../MusicItem/MusicItem";
 import Loading from "../../UI/Loading/Loading";
+import SadFace from "../../UI/SadFace/SadFace";
 
 import * as actions from "../../../redux/Music/actions";
 import { generateDownloadMusicFromURL } from "../../../utilities/url";
@@ -28,29 +29,32 @@ class MusicController extends Component {
   componentDidMount () {
     firebaseAxios.get(`/history/${ this.props.id }.json`)
     .then(response => {
+
+      if (response.data === null)
+        throw new Error("Can't get this song now");
+
       const { genreCategories, songBaseName, MP3FilePath, albumThumbFilePath, albumName, waveSurferFilePath } = response.data;
       const genres = genreCategories.map(genreCategorie => genreCategorie.name);
 
       return axios.get(waveSurferFilePath)
       .then(response => {
-        return {
+        this.setState({
           loading: false,
+          error: null,
+          
           thumbnail: albumThumbFilePath,
           name: songBaseName,
           playlist: albumName,
           music: MP3FilePath,
           genres,
           peaks: response.data
-        };
+        });
       })
-    })
-    .then(response => {
-      this.setState(response);
     })
     .catch(error => {
       console.error(error);
 
-      this.setState({ loading: false, error: error });
+      this.setState({ loading: false, error: error.message });
     });
   }
 
@@ -99,24 +103,42 @@ class MusicController extends Component {
 
   render () {
 
-    return (
-      this.state.loading
-      ? <div className="py-5">
+    let mainContain = null;
+
+    if (this.state.loading)
+      mainContain = (
+        <div className="py-5 p-0">
           <Loading loadingColor="gray"textColor="gray" />
         </div> 
-      : <MusicItem
-        id={ this.props.id }
-        thumbnail={ this.state.thumbnail }
-        name={ this.state.name }
-        playlist={ this.state.playlist }
-        genres={ this.state.genres }
-        music={ this.state.music }
-        peaks={ this.state.peaks }
-        isPlaying={ this.state.isFocus ? this.props.isPlaying : false }
-        process={ this.state.isFocus ? this.props.process : 0 }
-        toggled={ this.handleToggle }
-        downloaded={ this.handleDownloadMusic } />
-    );
+      );
+    else {
+      if (this.state.error)
+        mainContain = (
+          <div className="py-4 p-0">
+            <SadFace 
+              faceColor="gray-light" 
+              textColor="gray-light"
+              iconSize="3">Couldn't load this song</SadFace>
+          </div>
+        );
+      else
+        mainContain = (
+          <MusicItem
+            id={ this.props.id }
+            thumbnail={ this.state.thumbnail }
+            name={ this.state.name }
+            playlist={ this.state.playlist }
+            genres={ this.state.genres }
+            music={ this.state.music }
+            peaks={ this.state.peaks }
+            isPlaying={ this.state.isFocus ? this.props.isPlaying : false }
+            process={ this.state.isFocus ? this.props.process : 0 }
+            toggled={ this.handleToggle }
+            downloaded={ this.handleDownloadMusic } />
+        );
+    }
+
+    return mainContain;
   }
 }
 

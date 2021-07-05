@@ -2,16 +2,24 @@ import firebaseAxios from "../axios/firebase.axios";
 import artlistAxios from "../axios/artlist_io.axios";
 import axios from "axios";
 
+import * as historyStatusText from "../pages/History/statusText";
+
 export const status = {
   PUT_TO_FIREBASE_OK: "PUT_TO_FIREBASE_OK",
   EXIST_IN_FIREBASE: "EXIST_IN_FIREBASE",
   NOT_EXIST_IN_FIREBASE: "NOT_EXIST_IN_FIREBASE",
   GET_FROM_FIREBASE_OK: "GET_FROM_FIREBASE_OK",
+  UPDATE_FROM_FIREBASE_OK: "UPDATE_FROM_FIREBASE_OK",
   CREATED_TIMESTAMP: "CREATED_TIMESTAMP"
 }
 
 export const getTopNewMusics = (numberMusics) => {
-  return firebaseAxios.get(`/timestamp.json?&orderBy="createdAt"&limitToLast=${numberMusics}`)
+  return firebaseAxios.get(`/timestamp.json`, {
+    params: {
+      orderBy: `"createdAt"`,
+      limitToLast: numberMusics
+    }
+  })
   .then(response => {
 
     const orderedMusicIds = Object.keys(response.data)
@@ -25,28 +33,85 @@ export const getTopNewMusics = (numberMusics) => {
       statusText: status.GET_FROM_FIREBASE_OK,
     }
 
-    return result
+    return result;
   })
 }
 
-export const getIdFromUrl = urlString => {
-  try {
-    const url = new URL(urlString);
-    const pathNames = url.pathname.split("/");
+export const getMoreMusics = (numberMusics, orderBy, lastPosition = null) => {
 
-    if (url.origin !== "https://artlist.io" || pathNames[1] !== "song")
-      throw new Error("That URL is not supported!");
-  
-    const id = Number(pathNames[2]);
-  
-    if (isNaN(id))
-      throw new Error("Can't find the music id in that URL!");
-  
-    return id;
-  } catch (error) {
-    console.log(error);
-    return error;
+  switch (orderBy) {
+    case historyStatusText.ORDER_BY_DATE:
+      return firebaseAxios.get(`/timestamp.json`, {
+        params: {
+          orderBy: `"createdAt"`,
+          limitToLast: numberMusics + 1,
+          endAt: lastPosition || undefined
+        }
+      })
+      .then(response => {
+        const orderedMusics = Object.keys(response.data)
+          .map(key => { return { id: key, createdAt: response.data[key].createdAt } })
+          .sort((prevItem, nextItem) => nextItem.createdAt - prevItem.createdAt);
+
+        lastPosition ? orderedMusics.shift() : orderedMusics.pop();
+      
+        const result = {
+          ...response,
+          data: orderedMusics.map(item => item.id),
+          statusText: status.UPDATE_FROM_FIREBASE_OK,
+          lastData: orderedMusics.length > 0 ? orderedMusics[orderedMusics.length - 1].createdAt : lastPosition,
+          canContinued: orderedMusics.length === numberMusics
+        }
+      
+        return result;
+      });
+
+    case historyStatusText.ORDER_BY_NAME:
+      return firebaseAxios.get(`/history.json`, {
+        params: {
+          orderBy: `"songBaseName"`,
+          limitToFirst: numberMusics + 1,
+          startAt: lastPosition ? `"${lastPosition}"` : undefined
+        }
+      })
+      .then(response => {
+        const orderedMusics = Object.keys(response.data)
+          .map(key => { return { id: key, name: response.data[key].songBaseName } })
+          .sort((prevItem, nextItem) => nextItem.name < prevItem.name ? 1 : -1);
+
+        lastPosition ? orderedMusics.shift() : orderedMusics.pop();
+      
+        const result = {
+          ...response,
+          data: orderedMusics.map(item => item.id),
+          statusText: status.UPDATE_FROM_FIREBASE_OK,
+          lastData: orderedMusics.length > 0 ? orderedMusics[orderedMusics.length - 1].name : lastPosition,
+          canContinued: orderedMusics.length === numberMusics
+        }
+      
+        return result;
+      });
+
+    default:
+      throw new Error("Unknown how to order your musics");
   }
+
+ 
+}
+
+export const getIdFromUrl = urlString => {
+  const url = new URL(urlString);
+  const pathNames = url.pathname.split("/");
+
+  if (url.origin !== "https://artlist.io" || pathNames[1] !== "song")
+    throw new Error("That URL is not supported!");
+
+  const id = Number(pathNames[2]);
+  
+  if (isNaN(id))
+    throw new Error("Can't find the music id in that URL!");
+
+  return id;
 }
 
 export const getMusicFromFirebase = async musicId => {

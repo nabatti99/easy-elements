@@ -9,7 +9,7 @@ class Test extends Component {
       <Modal 
         title="Test"
         content="123123123"
-        show/>
+        show={false}/>
       <h1>123123flsdjflajsdlfjsldjflskjflsjflkasdjfsaidjflksfmlaf</h1>
     </div>
   }

@@ -1,15 +1,17 @@
 import { Component } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import { getIdFromUrl } from "../../utilities/url";
+import { pushToast } from "../../redux/Toast/actions";
+import * as statusText from "../../redux/Toast/statusTexts";
 
 const withUrlController = Searchbar => {
   class WithUrlController extends Component {
 
     state = {
       url: "",
-      id: null,
-      error: null
+      id: null
     }
 
     handleChangeUrl = (event) => {
@@ -19,15 +21,21 @@ const withUrlController = Searchbar => {
     handleSearch = (event) => {
       event.preventDefault();
 
-      const id = getIdFromUrl(this.state.url);
+      try {
+        const id = getIdFromUrl(this.state.url);
 
-      if (id instanceof Error) {
-        this.setState({ error: id });
-        return;
+        this.props.history.push(`/music/${id}`);
+      } catch (error) {
+        this.props.onPushToast(
+          "URL Error", 
+          "", 
+          <div>
+            <p>{ error.message }</p>
+            <p>The correct URL is having <span className="text-primary">"https://artlist.io/"</span> origin name!</p>
+          </div>, 
+          statusText.ERROR
+        )
       }
-
-      this.props.history.push(`/music/${id}`);
-      console.log(this.props.history);
     }
   
     render () {
@@ -40,7 +48,13 @@ const withUrlController = Searchbar => {
     }
   }
 
-  return withRouter(WithUrlController);
+  return connect(null, mapDispatchToState)(withRouter(WithUrlController));
 }
 
-export default withUrlController;
+const mapDispatchToState = dispatch => {
+  return {
+    onPushToast: (header, subHeader, content, statusText) => dispatch( pushToast(header, subHeader, content, statusText) )
+  }
+}
+
+export default (withUrlController);

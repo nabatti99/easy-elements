@@ -7,19 +7,19 @@ import Sidebar from "./Sidebar/Sidebar";
 class Navigation extends Component {
 
   state = {
-    showSidebar: false
+    isShowedSidebar: false
   }
 
   handleToggleSidebar = () => {
-    this.setState({ showSidebar: !this.state.showSidebar });
+    this.setState({ isShowedSidebar: !this.state.isShowedSidebar });
   }
 
   render () {
 
     return (
       <Fragment>
-        <Navbar toggledSidebar={ this.handleToggleSidebar } />
-        <Sidebar show={ this.state.showSidebar } />
+        <Navbar toggledSidebar={ this.handleToggleSidebar } isShowed={ this.state.isShowedSidebar } />
+        <Sidebar show={ this.state.isShowedSidebar } />
       </Fragment>
     );
   }

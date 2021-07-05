@@ -19,8 +19,7 @@ const searchBar = props => (
           </label>
           <input 
             className="form-control bg-transparent border-0 shadow-none p-1 me-4" 
-            type="url" 
-            id="SearchUrl" 
+            type="url"
             name="url" 
             placeholder="Put Artlist's URL here"
             value={ props.value }

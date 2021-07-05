@@ -1,4 +1,4 @@
-import { Component, createRef } from "react";
+import { Component } from "react";
 
 import classes from "./MusicFloating.module.scss";
 import Waveform from "../../UI/Waveform/Waveform";

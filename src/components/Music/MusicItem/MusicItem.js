@@ -49,7 +49,7 @@ class MusicItem extends Component {
     return (
       <div className="row py-4">
 
-        <div className="col-md-2 d-md-flex d-none">
+        <div className="col-lg-1 col-md-2 d-md-flex d-none">
           <div className={ className.container }>
             <div className="col-auto">
               <img src={ thumbnail } height="80px" alt="Thumbnail" />
@@ -65,17 +65,17 @@ class MusicItem extends Component {
           </div>
         </div>
 
-        <div className="col-md-2 col-4">
+        <div className="col-lg-3 col-md-2 col-4">
           <div className={ className.containerLeft }>
             <div className="col-auto">
               <a className={ className.musicName } href={ `/music/${this.props.id}` }>{ name }</a>
-              <a className={ className.playlistName }>{ playlist }</a>
+              <p className={ className.playlistName }>{ playlist }</p>
             </div>
           </div>
         </div>
 
         <div className="col-md-3 col-2">
-          <div className={ className.container }>
+          <div className={ className.containerLeft }>
             <div className="col-auto">
               { genresLink }
             </div>
