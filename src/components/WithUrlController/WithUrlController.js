@@ -22,9 +22,12 @@ const withUrlController = Searchbar => {
       event.preventDefault();
 
       try {
-        const id = getIdFromUrl(this.state.url);
+        const { id, isSFX } = getIdFromUrl(this.state.url);
 
-        this.props.history.push(`/music/${id}`);
+        if (isSFX)
+          this.props.history.push(`/sfx/${id}`);
+        else
+          this.props.history.push(`/music/${id}`);
       } catch (error) {
         this.props.onPushToast(
           "URL Error", 

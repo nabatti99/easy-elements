@@ -19,7 +19,6 @@ class Toast extends Component {
   componentDidUpdate () {
     
     if (!this.props.id) {
-      console.log("Close");
       this.toastTimeoutId = null;
       return;
     }
@@ -38,7 +37,7 @@ class Toast extends Component {
   }
 
   handleClickClickButton = () => {
-    clearTimeout(this.state.toastId);
+    clearTimeout(this.toastTimeoutId);
     this.closeToast();
   }
 

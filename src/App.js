@@ -9,6 +9,7 @@ import store from "./redux/store";
 import Layout from "./containers/Layout/Layout";
 import Home from "./pages/Home/Home";
 import Music from "./pages/Music/Music";
+import SFX from "./pages/SFX/SFX";
 import Page404Error from "./pages/Page404Error/Page404Error";
 import History from "./pages/History/History";
 
@@ -25,8 +26,9 @@ function App() {
             
             <Switch>
               <Route path="/music/:id" exact component={ Music } />
-              <Route path="/" exact component={ Home } />
+              <Route path="/sfx/:id" exact component={ SFX } />
               <Route path="/history" exact component={ History } />
+              <Route path="/" exact component={ Home } />
               <Route path="/test" component={ Test } />
               <Route path="*" component={ Page404Error } />
             </Switch>

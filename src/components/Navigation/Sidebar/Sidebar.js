@@ -1,9 +1,41 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 import classes from "./Sidebar.module.scss";
 
 import SearchBar from "../../UI/Searchbar/Searchbar";
 
+/**
+ * @param show Boolean
+ * @param clickedOutside Event
+ */
 class Sidebar extends Component {
+
+  sideBarRef = createRef();
+
+  activeHandler = false;
+
+  componentDidUpdate() {
+    if (this.props.show){
+      this.activeHandler = false;
+      document.addEventListener("click", this.handleClickedOutside);
+      console.log("add Event");
+    }
+  }
+
+  handleClickedOutside = (event) => {
+
+    if (!this.activeHandler) {
+      this.activeHandler = true;
+      return;
+    }
+
+    const sideBar = this.sideBarRef.current;
+    const targetClicked = event.target;
+
+    if (sideBar !== targetClicked && !sideBar.contains(targetClicked)) {
+      this.props.clickedOutside();
+      document.removeEventListener("click", this.handleClickedOutside);
+    }
+  }
 
   render () {
 
@@ -20,7 +52,7 @@ class Sidebar extends Component {
     }
 
     return (
-      <div className={ className.sidebar }>
+      <div className={ className.sidebar } ref={ this.sideBarRef }>
         <div className={ className.container } >
 
           <div className="col-auto">
@@ -36,7 +68,7 @@ class Sidebar extends Component {
           <div className="col-auto mb-4">
             <dd><a className={ className.link } href="/">Get your musics</a></dd>
             <dd><a className={ className.link } href="/history">History</a></dd>
-            <dd><a className={ className.linkDisabled } href="/moods">Moods</a></dd>
+            <dd><a className={ className.linkDisabled } href="/moods" >Moods</a></dd>
           </div>
 
           <div className="col-auto mt-auto">

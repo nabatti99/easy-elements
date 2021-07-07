@@ -5,6 +5,7 @@ const initialState = {
   thumbnail: "",
   name: "",
   playlist: "",
+  isSFX: false,
 
   isPlaying: false,
   process: 0,
@@ -24,6 +25,7 @@ const reducer = (state = initialState, action) => {
         name: action.name,
         playlist: action.playlist,
         isPlaying: true,
+        isSFX: action.isSFX,
         
         process: 0
       }

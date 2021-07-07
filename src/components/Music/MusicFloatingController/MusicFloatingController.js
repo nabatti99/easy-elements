@@ -5,7 +5,10 @@ import { parseTime, parseProcess, parseVolumeByClientX } from "../../../utilitie
 import MusicFloating from "../MusicFloating/MusicFloating";
 
 import * as actions from "../../../redux/Music/actions";
-import { generateDownloadMusicFromURL } from "../../../utilities/url";
+import { 
+  generateDownloadMusicFromURL,
+  generateDownloadSFXFromURL
+} from "../../../utilities/url";
 
 class MusicFloatingController extends Component {
 
@@ -107,7 +110,10 @@ class MusicFloatingController extends Component {
   }
 
   handleDownloadMusic = () => {
-    generateDownloadMusicFromURL(this.props.music, `${this.props.name}.mp3`);
+    if (this.props.isSFX)
+      generateDownloadSFXFromURL(this.props.music, `${this.props.name}.aac`);
+    else
+      generateDownloadMusicFromURL(this.props.music, `${this.props.name}.mp3`);
   }
 
   handleClickWaveform = (newProcess) => {
@@ -145,7 +151,9 @@ const mapStateToProps = state => {
   
     isPlaying: state.music.isPlaying,
     music: state.music.music,
-    peaks: state.music.peaks
+    peaks: state.music.peaks,
+
+    isSFX: state.music.isSFX
   }
 }
 

@@ -2,23 +2,22 @@ import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import { 
-  checkMusicExistFirebase, 
+  checkSFXExistFirebase, 
   status, 
-  getMusicFromFirebase,
-  putNewMusicToFirebase, 
-  generateDownloadMusicFromURL,
-  createTimestamp } from "../../utilities/url";
+  getSFXFromFirebase,
+  putNewSFXToFirebase, 
+  generateDownloadSFXFromURL } from "../../utilities/url";
 import { playNewMusic, playMusic, pauseMusic } from "../../redux/Music/actions";
 import { pushToast } from "../../redux/Toast/actions";
 import * as statusText from "../../redux/Toast/statusTexts";
 
-import MusicHeader from "./MusicHeader/MusicHeader";
-import MusicInfo from "./MusicInfor/MusicInfo";
+import SFXHeader from "./SFXHeader/SFXHeader";
+import SFXInfo from "./SFXInfor/SFXInfor";
 import Loading from "../../components/UI/Loading/Loading";
 import SadFace from "../../components/UI/SadFace/SadFace";
 import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
 
-class Music extends Component {
+class SFX extends Component {
 
   state = {
     loading: true,
@@ -33,29 +32,29 @@ class Music extends Component {
     artistId: "",
     urlCover: "",
     urlPlaylistThumb: "",
-    urlPlaylistImage: "",
-    relatedMusics: [],
-    playlistId: null,
-    music: null,
+    urlPackImage: "",
+    relatedSFXs: [],
+    packId: null,
+    sfx: null,
     categories: {}
   }
 
   getMusic = async (id) => {
     // Update to Firebase Pipeline
-    this.setState({ message: "Checking the music ..." })
-    return checkMusicExistFirebase(id)
+    this.setState({ message: "Checking the SFX ..." })
+    return checkSFXExistFirebase(id)
     .then(response => { // Check the music existed in Firebase
       console.log(response);
       switch (response.statusText) {
         case status.EXIST_IN_FIREBASE:
           return {
             statusText: status.EXIST_IN_FIREBASE,
-            message: `The music has id = ${id} has exist in firebase`
+            message: `The SFX has id = ${id} has exist in firebase`
           };
 
         case status.NOT_EXIST_IN_FIREBASE:
-          this.setState({ message: "Getting your music from Artlist.io..." })
-          return putNewMusicToFirebase(id);
+          this.setState({ message: "Getting your SFX from Artlist.io..." })
+          return putNewSFXToFirebase(id);
 
         default:
           console.log(response);
@@ -64,13 +63,12 @@ class Music extends Component {
     })
     .then(response => { // Load music data to Page
       console.log(response);
-      this.setState({ message: "The music has been successfully got" });
+      this.setState({ message: "The SFX has been successfully got" });
       switch (response.statusText) {
         case status.PUT_TO_FIREBASE_OK:
         case status.EXIST_IN_FIREBASE:
 
-          createTimestamp(id);
-          return getMusicFromFirebase(id) // Get music detail from Firebase
+          return getSFXFromFirebase(id) // Get music detail from Firebase
 
         default:
           throw new Error("Unknown status text");
@@ -92,20 +90,20 @@ class Music extends Component {
     .then(response => { // Sync state
       console.log(response);
       const { 
-        songBaseName, MP3FilePath, albumCoverFilePath, 
+        songName, sitePlayableFilePath, albumCoverFilePath, 
         albumThumbFilePath, albumName, artistName, 
         albumId, artistId, similarSongs, 
-        albumImageFilePath, categories, peaks 
+        albumImageFilePath, grandChildCategories, peaks 
       } = response.data;
 
-      const parsedCategories = categories.reduce((result, category) => {
+      const parsedCategories = grandChildCategories.reduce((result, category) => {
         result[category.parentName] = result[category.parentName] || [];
         result[category.parentName].push(category.name);
 
         return result;
       }, {});
       
-      const relatedMusics = JSON.parse(similarSongs)
+      const relatedSFXs = JSON.parse(similarSongs)
         .map(song => {
           return {
             id: song.id,
@@ -115,28 +113,27 @@ class Music extends Component {
         });
 
       this.setState({
-        name: songBaseName,
+        name: songName,
         playlistName: albumName,
         artist: artistName,
         artistId: artistId,
         urlCover: albumCoverFilePath,
         urlPlaylistThumb: albumThumbFilePath,
-        urlPlaylistImage: albumImageFilePath,
-        relatedMusics: relatedMusics,
+        urlPackImage: albumImageFilePath,
+        relatedSFXs: relatedSFXs,
         categories: parsedCategories,
-        playlistId: albumId,
-        music: MP3FilePath,
+        packId: albumId,
+        sfx: sitePlayableFilePath,
         peaks: peaks,
 
         loading: false,
         error: null
       });
 
-      this.props.onPlayNewMusic(this.state.id, albumThumbFilePath, songBaseName, albumName, MP3FilePath, peaks);
+      this.props.onPlayNewMusic(this.state.id, albumThumbFilePath, songName, albumName, sitePlayableFilePath, peaks, true);
       this.props.onPause();
     })
     .catch(error => {
-      console.log(error);
       this.setState({ loading: false, error: error.message, message: "Oops, something went wrong!" });
       this.props.onPushToast(
         error.message, "", 
@@ -170,14 +167,14 @@ class Music extends Component {
     }
   }
 
-  handleDownloadMusic = () => {
-    generateDownloadMusicFromURL(this.state.music, `${this.state.name}.mp3`);
+  handleDownloadSFX = () => {
+    generateDownloadSFXFromURL(this.state.sfx, `${this.state.name}.aac`);
   }
 
   render () {
 
     const className = {
-      music: "container-fluid",
+      sfx: "container-fluid",
       container: "row flex-column",
       header: "col-auto p-0",
       info: "col-auto p-0"
@@ -203,23 +200,23 @@ class Music extends Component {
         pageContain = (
           <Fragment>
             <div className={ className.header }>
-                <MusicHeader
+                <SFXHeader
                   title={ this.state.name }
                   artist={ this.state.artist }
                   artistId={ this.state.artistId }
                   bgUrl={ this.state.urlCover }
                   isPlaying={ this.props.isPlaying }
                   toggled={ this.handleToggleButton }
-                  downloaded={ this.handleDownloadMusic }
+                  downloaded={ this.handleDownloadSFX }
                   shared={ null } />
               </div>
     
               <div className={ className.info }>
-                <MusicInfo
+                <SFXInfo
                   categories={ this.state.categories }
-                  urlImagePlaylist={ this.state.urlPlaylistImage }
-                  playlistId={ this.state.playlistId }
-                  relatedMusics={ this.state.relatedMusics } />
+                  urlImagePack={ this.state.urlPackImage }
+                  packId={ this.state.packId }
+                  relatedSFXs={ this.state.relatedSFXs } />
               </div>
           </Fragment>
         )
@@ -227,7 +224,7 @@ class Music extends Component {
 
     return (
       <ErrorBoundary>
-        <div className={ className.music }>
+        <div className={ className.sfx }>
           <div className={ className.container }>
 
             { pageContain }
@@ -247,11 +244,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(playNewMusic(id, thumbnail, name, playlist, music, peaks)),
+    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks, isSFX) => dispatch(playNewMusic(id, thumbnail, name, playlist, music, peaks, isSFX)),
     onPlay: () => dispatch(playMusic()),
     onPause: () => dispatch(pauseMusic()),
     onPushToast: (header, subHeader, content, statusText) => dispatch(pushToast(header, subHeader, content, statusText))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Music);
+export default connect(mapStateToProps, mapDispatchToProps)(SFX);

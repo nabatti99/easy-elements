@@ -8,7 +8,8 @@ import MusicItem from "../MusicItem/MusicItem";
 import Loading from "../../UI/Loading/Loading";
 import SadFace from "../../UI/SadFace/SadFace";
 
-import * as actions from "../../../redux/Music/actions";
+import { playNewMusic, playMusic, pauseMusic } from "../../../redux/Music/actions";
+import { pushToast } from "../../../redux/Toast/actions";
 import { generateDownloadMusicFromURL } from "../../../utilities/url";
 
 class MusicController extends Component {
@@ -53,7 +54,15 @@ class MusicController extends Component {
     })
     .catch(error => {
       console.error(error);
-
+      pushToast(
+        "Can't play music now",
+        "Music controller",
+        <div>
+          <p>Unexpected error in the Music Controller</p>
+          <p>Detail: { error.message }</p>
+          <p><i>If you see that error again. Please contact Minh for more information</i></p>
+        </div>
+      )
       this.setState({ loading: false, error: error.message });
     });
   }
@@ -152,9 +161,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(actions.playNewMusic(id, thumbnail, name, playlist, music, peaks)),
-    onPlay: () => dispatch(actions.playMusic()),
-    onPause: () => dispatch(actions.pauseMusic())
+    onPlayNewMusic: (id, thumbnail, name, playlist, music, peaks) => dispatch(playNewMusic(id, thumbnail, name, playlist, music, peaks)),
+    onPlay: () => dispatch(playMusic()),
+    onPause: () => dispatch(pauseMusic()),
+    onPushToast: (header, subHeader, content, statusText) => dispatch(pushToast(header, subHeader, content, statusText))
   }
 }
 
