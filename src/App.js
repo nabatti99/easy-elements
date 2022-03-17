@@ -6,14 +6,16 @@ import './App.scss';
 
 import store from "./redux/store";
 
+import asyncComponent from "./components/AsyncComponent/AsyncComponent";
 import Layout from "./containers/Layout/Layout";
 import Home from "./pages/Home/Home";
-import Music from "./pages/Music/Music";
-import SFX from "./pages/SFX/SFX";
-import Page404Error from "./pages/Page404Error/Page404Error";
-import History from "./pages/History/History";
 
-import Test from "./pages/Test/Test";
+const Music = asyncComponent(() => import("./pages/Music/Music"));
+const SFX = asyncComponent(() => import("./pages/SFX/SFX"));
+const Page404Error = asyncComponent(() => import("./pages/Page404Error/Page404Error"));
+const History = asyncComponent(() => import("./pages/History/History"));
+
+const Test = asyncComponent(() => import("./pages/Test/Test"));
 
 function App() {
 
@@ -25,12 +27,12 @@ function App() {
           <Layout >
             
             <Switch>
-              <Route path="/music/:id" exact component={ Music } />
-              <Route path="/sfx/:id" exact component={ SFX } />
-              <Route path="/history" exact component={ History } />
-              <Route path="/" exact component={ Home } />
-              <Route path="/test" component={ Test } />
-              <Route path="*" component={ Page404Error } />
+              <Route path="/music/:id" exact render={(props) => <Music {...props} />} />
+              <Route path="/sfx/:id" exact render={(props) => <SFX {...props} />} />
+              <Route path="/history" exact render={(props) => <History {...props} />} />
+              <Route path="/" exact render={(props) => <Home {...props} />} />
+              <Route path="/test" exact render={(props) => <Test {...props} />} />
+              <Route path="*" render={(props) => <Page404Error {...props} />} />
             </Switch>
 
           </Layout>
